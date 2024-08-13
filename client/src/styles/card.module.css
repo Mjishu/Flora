@@ -1,0 +1,43 @@
+.buttonHolder {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    width: 12.5rem;
+}
+
+.answerButton {
+    border: none;
+    background-color: hsl(var(--off-white));
+    border-radius: 5px;
+    width: 5rem;
+    height: 1.5rem;
+    box-shadow: 0 0 5px #2b2b2b36;
+}
+
+/** Button styles*/
+
+.buttonKnown {
+    color: hsl(var(--green));
+}
+
+.buttonKnown:active {
+    color: hsl(var(--off-white));
+    background-color: hsl(var(--green));
+}
+
+.buttonKnown:hover {
+    box-shadow: 0 0 5px hsla(var(--green), 0.5);
+}
+
+.buttonUnknown {
+    color: hsl(var(--red));
+}
+
+.buttonUnknown:active {
+    color: hsl(var(--off-white));
+    background-color: hsl(var(--red));
+}
+
+.buttonUnknown:hover {
+    box-shadow: 0 0 5px hsl(var(--red), 0.5);
+}

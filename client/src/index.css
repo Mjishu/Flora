@@ -1,0 +1,13 @@
+:root {
+
+    --off-white: 315, 3%, 94%;
+    --background-black: 315, 14%, 10%;
+
+    --green: 131, 83%, 30%;
+    --red: 0, 85%, 39%;
+}
+
+body {
+    background-color: hsl(var(--background-black));
+    color: hsl(var(--off-white));
+}
