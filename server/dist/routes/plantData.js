@@ -29,5 +29,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const plantDataController = __importStar(require("../controllers/plantDataController"));
-router.get("/", plantDataController.floridaTrees);
+router.get("/florida-trees", plantDataController.floridaTrees);
 exports.default = router;

@@ -3,6 +3,6 @@ const router = express.Router()
 
 import * as plantDataController from "../controllers/plantDataController";
 
-router.get("/", plantDataController.floridaTrees);
+router.get("/florida-trees", plantDataController.floridaTrees);
 
 export default router

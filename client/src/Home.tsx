@@ -19,13 +19,11 @@ interface Tree {
 function Home() {
   const [floridaTrees, setFloridaTrees] = React.useState<Tree[] | null>(null);
   const [loading, setLoading] = React.useState(true);
-  //const trefleUrl = "https://trefle.io/api/v1/";
 
   React.useEffect(() => {
-    //const url = `${trefleUrl}/plants?token=${import.meta.env.VITE_TREFLE_TOKEN}&filter[distribution]=florida&filter[plant_type]=tree`//url is ok when pasted to browser but it not calling
-    fetch("/api/meow")
+    fetch("/api/florida-trees")
       .then(res => res.json())
-      .then(data => setFloridaTrees(data))
+      .then(data => console.log(`data is ${data}`))
       .catch(err => console.error(`error fetching florida trees: ${err}`)) //network error?
       .finally(() => setLoading(false))
   }, [])

@@ -20,6 +20,5 @@ exports.floridaTrees = (0, express_async_handler_1.default)((req, res, next) => 
     const url = `https://trefle.io/api/v1/plants?token=${process.env.TREFLE_TOKEN}&filter[distribution]=florida&filter[plant_type]=tree`;
     const response = yield fetch(url);
     const json = yield response.json();
-    res.send(json.data);
-    console.log(json.data.length);
+    res.json(json);
 }));
