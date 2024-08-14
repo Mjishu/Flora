@@ -1,7 +1,7 @@
 import React from 'react';
 import style from "../styles/card.module.css"
 
-export default function Card(props: { image: string, cardName: string; description: string }) {
+export default function Card(props: { image: string, common_name: string; }) {
     const [known, setKnown] = React.useState(false)
 
     function handleKnown() {
@@ -14,9 +14,8 @@ export default function Card(props: { image: string, cardName: string; descripti
 
     return (
         <div>
-            {props.image && <img src={props.image} className='CardImage' />}
-            <h3>{props.cardName}</h3>
-            <p>{props.description}</p>
+            <h3>{props.common_name}</h3>
+            {props.image && <img src={props.image} className={style.CardImage} />}
             <div className={style.buttonHolder}>
                 <button className={`${style.answerButton} ${style.buttonKnown}`} onClick={handleKnown}>Know</button>
                 <button className={`${style.answerButton} ${style.buttonUnknown}`} onClick={handleUnknown}>Don't Know</button>
@@ -24,4 +23,4 @@ export default function Card(props: { image: string, cardName: string; descripti
             <p>The current card is {known ? "Known" : "Unknown"}</p>
         </div>
     )
-}
+} 

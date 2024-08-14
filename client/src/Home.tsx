@@ -23,7 +23,7 @@ function Home() {
   React.useEffect(() => {
     fetch("/api/florida-trees")
       .then(res => res.json())
-      .then(data => console.log(`data is ${data}`))
+      .then(data => setFloridaTrees(data.data))
       .catch(err => console.error(`error fetching florida trees: ${err}`)) //network error?
       .finally(() => setLoading(false))
   }, [])
@@ -37,10 +37,22 @@ function Home() {
     console.log("No trees")
   }
 
+  const mappedTrees = floridaTrees?.map(tree => {
+    return (
+      <div key={tree.id}>
+        <Card
+          common_name={tree.common_name}
+          image={tree.image_url}
+        />
+      </div>
+
+    )
+  })
+
   return (
     <>
       <p>Welcome to flora</p>
-      <Card cardName="white shrub" image="" description='Shrub of the white variety, takes multiple forms, most common is skully bunally' />
+      {mappedTrees}
     </>
   )
 }
