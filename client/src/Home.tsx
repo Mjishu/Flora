@@ -5,15 +5,12 @@ import Card from './components/Card';
 interface Tree {
   id: number;
   common_name: string;
-  slug: string;
   scientific_name: string;
   rank: string;
   family_common_name: string;
-  genus_id: number;
   image_url: string;
   genus: string;
   family: string;
-  [key: string]: any;
 }
 
 function Home() {
@@ -23,7 +20,7 @@ function Home() {
   React.useEffect(() => {
     fetch("/api/florida-trees")
       .then(res => res.json())
-      .then(data => setFloridaTrees(data.data))
+      .then(data => setFloridaTrees(data))
       .catch(err => console.error(`error fetching florida trees: ${err}`)) //network error?
       .finally(() => setLoading(false))
   }, [])

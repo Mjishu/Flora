@@ -41,11 +41,8 @@ const express_async_handler_1 = __importDefault(require("express-async-handler")
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const db = __importStar(require("../db/queries"));
-exports.floridaTrees = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const url = `https://trefle.io/api/v1/plants?token=${process.env.TREFLE_TOKEN}&filter[distribution]=florida&filter[plant_type]=tree`;
-    const response = yield fetch(url);
-    const json = yield response.json();
-    const mapped = json.data.map((entry) => ({
+function sortData(data) {
+    return data.map((entry) => ({
         common_name: entry.common_name,
         image_url: entry.image_url,
         scientific_name: entry.scientific_name,
@@ -54,8 +51,14 @@ exports.floridaTrees = (0, express_async_handler_1.default)((req, res, next) => 
         genus: entry.genus,
         family: entry.family
     }));
-    console.log(mapped);
-    console.log(mapped.length);
+}
+;
+exports.floridaTrees = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const url = `https://trefle.io/api/v1/plants?token=${process.env.TREFLE_TOKEN}&filter[distribution]=florida&filter[plant_type]=tree`;
+    const response = yield fetch(url);
+    const json = yield response.json();
+    const mapped = sortData(json.data); //How to put this data in the database?
+    res.send(mapped); //instead of sending this put it db and then send db entries to frontend
 }));
 function getFloridaTrees(req, res) {
     return __awaiter(this, void 0, void 0, function* () {

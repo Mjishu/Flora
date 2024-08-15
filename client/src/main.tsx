@@ -1,10 +1,20 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import Home from './Home.tsx'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import routes from "../routes"
 import './index.css'
+
+//* This is for context I believe
+/*const wrappedRoutes = routes.map(route => ({
+  ...route,
+  element: <UserProvider>{route.element}</UserProvider>
+}))*/
+
+const router = createBrowserRouter(routes)
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Home />
+    <RouterProvider router={router} />
   </React.StrictMode>,
 )
+
