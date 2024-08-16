@@ -1,8 +1,8 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import routes from "../routes"
-import './index.css'
+import routes from "../routes.jsx";
+import './index.css';
 
 //* This is for context I believe
 /*const wrappedRoutes = routes.map(route => ({

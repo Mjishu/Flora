@@ -37,10 +37,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.floridaTrees = void 0;
 exports.getFloridaTrees = getFloridaTrees;
+exports.getSRS = getSRS;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const db = __importStar(require("../db/queries"));
+const srs_1 = __importDefault(require("../srs"));
 function sortData(data) {
     return data.map((entry) => ({
         common_name: entry.common_name,
@@ -49,7 +51,7 @@ function sortData(data) {
         rank: entry.rank,
         family_common_name: entry.family_common_name,
         genus: entry.genus,
-        family: entry.family
+        family: entry.family,
     }));
 }
 ;
@@ -65,5 +67,16 @@ function getFloridaTrees(req, res) {
         const common_names = yield db.getAllCommonNames();
         console.log("common_names are ", common_names);
         res.send("common names: " + common_names.map((name) => name.common_name).join(", "));
+    });
+}
+function getSRS(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const previous = {
+            N: 0, eFactor: 2.5, new: false, data: {}
+        };
+        const evaluation = {
+            lateness: 0, score: 5.0
+        };
+        res.send((0, srs_1.default)(previous, evaluation));
     });
 }

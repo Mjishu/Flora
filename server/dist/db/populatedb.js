@@ -10,6 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 const { Client } = require("pg");
 require("dotenv").config();
+/*// ? DB SHOULD HAVE
+    N value, time_till_next_review, eFactor,
+*/
 const SQL = `
 CREATE TABLE IF NOT EXISTS florida_plants (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,

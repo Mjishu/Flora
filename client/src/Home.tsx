@@ -1,6 +1,7 @@
 import React from 'react'
 import './App.css'
 import Card from './components/Card';
+import Navbar from './components/Navbar';
 
 interface Tree {
   id: number;
@@ -15,6 +16,7 @@ interface Tree {
 
 function Home() {
   const [floridaTrees, setFloridaTrees] = React.useState<Tree[] | null>(null);
+  const [plantNumber, setPlantNumber] = React.useState(0)
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
@@ -28,28 +30,18 @@ function Home() {
   if (loading) {
     return <h1>App is loading</h1>
   }
-  if (floridaTrees) {
-    console.log(floridaTrees.length)
-  } else {
-    console.log("No trees")
-  }
-
-  const mappedTrees = floridaTrees?.map(tree => {
-    return (
-      <div key={tree.id}>
-        <Card
-          common_name={tree.common_name}
-          image={tree.image_url}
-        />
-      </div>
-
-    )
-  })
 
   return (
     <>
+      <Navbar />
       <p>Welcome to flora</p>
-      {mappedTrees}
+      {floridaTrees && <Card
+        plantNumber={plantNumber}
+        setPlantNumber={setPlantNumber}
+        common_name={floridaTrees[plantNumber].common_name}
+        image={floridaTrees[plantNumber].image_url}
+        plantsLength={floridaTrees.length}
+      />}
     </>
   )
 }

@@ -4,6 +4,7 @@ dotenv.config();
 import * as db from "../db/queries";
 import { Client } from "pg";
 import { Response, Request } from "express"
+import srsFunc from "../srs";
 
 function sortData(data: { [key: string]: any }[]): { [key: string]: any }[] {
     return data.map((entry: { [key: string]: any }) => ({
@@ -13,7 +14,7 @@ function sortData(data: { [key: string]: any }[]): { [key: string]: any }[] {
         rank: entry.rank,
         family_common_name: entry.family_common_name,
         genus: entry.genus,
-        family: entry.family
+        family: entry.family,
     }))
 };
 
@@ -25,8 +26,19 @@ export const floridaTrees = asyncHandler(async (req, res, next) => {
     res.send(mapped) //instead of sending this put it db and then send db entries to frontend
 })
 
-export async function getFloridaTrees(req: any, res: any) {
+export async function getFloridaTrees(req: Request, res: Response) {
     const common_names = await db.getAllCommonNames();
     console.log("common_names are ", common_names);
     res.send("common names: " + common_names.map((name: any) => name.common_name).join(", "))
+}
+
+
+export async function getSRS(req: Request, res: Response) {
+    const previous = {
+        N: 0, eFactor: 2.5, new: false, data: {}
+    }
+    const evaluation = {
+        lateness: 0, score: 5.0
+    }
+    res.send(srsFunc(previous, evaluation))
 }

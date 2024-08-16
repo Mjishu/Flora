@@ -1,15 +1,32 @@
 import React from 'react';
 import style from "../styles/card.module.css"
 
-export default function Card(props: { image: string, common_name: string; }) {
+type CardProps = {
+    image: string;
+    common_name: string;
+    plantNumber: number;
+    setPlantNumber: (value: (prevNumber: number) => number) => void;
+    plantsLength: number;
+}
+
+export default function Card(props: CardProps) {
     const [known, setKnown] = React.useState(false)
 
     function handleKnown() {
         setKnown(true)
+        if (props.plantNumber >= props.plantsLength) { //!How to set plantNumber back down to 0?w
+            console.log("Hit max plants")
+            props.setPlantNumber((prevNumber: number) => 0)
+        }
+        props.setPlantNumber((prevNumber: number) => prevNumber + 1)
     }
 
     function handleUnknown() {
         setKnown(false)
+        if (props.plantNumber >= props.plantsLength) {
+            props.setPlantNumber((prevNumber: number) => 0)
+        }
+        //setPlantNumber((prevNumber: number) => prevNumber += 1)
     }
 
     return (
@@ -20,7 +37,7 @@ export default function Card(props: { image: string, common_name: string; }) {
                 <button className={`${style.answerButton} ${style.buttonKnown}`} onClick={handleKnown}>Know</button>
                 <button className={`${style.answerButton} ${style.buttonUnknown}`} onClick={handleUnknown}>Don't Know</button>
             </div>
-            <p>The current card is {known ? "Known" : "Unknown"}</p>
+
         </div>
     )
 } 
