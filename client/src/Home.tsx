@@ -20,7 +20,7 @@ function Home() {
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    fetch("/api/florida-trees")
+    fetch("/api/plants/florida-trees")
       .then(res => res.json())
       .then(data => setFloridaTrees(data))
       .catch(err => console.error(`error fetching florida trees: ${err}`)) //network error?
@@ -30,6 +30,8 @@ function Home() {
   if (loading) {
     return <h1>App is loading</h1>
   }
+
+
 
   return (
     <>

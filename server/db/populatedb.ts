@@ -19,6 +19,25 @@ VALUES
 ('milkweed','milkweed.png');
 `;
 
+function sortData(data: { [key: string]: any }[]): { [key: string]: any }[] {
+    return data.map((entry: { [key: string]: any }) => ({
+        common_name: entry.common_name,
+        image_url: entry.image_url,
+        scientific_name: entry.scientific_name,
+        rank: entry.rank,
+        family_common_name: entry.family_common_name,
+        genus: entry.genus,
+        family: entry.family,
+    }))
+};
+
+async function callTrefle() {
+    const url = `https://trefle.io/api/v1/plants?token=${process.env.TREFLE_TOKEN}&filter[distribution]=florida&filter[plant_type]=tree`
+    const response = await fetch(url)
+    const json = await response.json()
+    const mapped = sortData(json.data)
+}
+
 async function main() {
     console.log("seeding...")
     const client = new Client({

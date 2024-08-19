@@ -30,5 +30,6 @@ const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const plantDataController = __importStar(require("../controllers/plantDataController"));
 router.get("/florida-trees", plantDataController.floridaTrees);
-router.get("/srs", plantDataController.getSRS);
+router.post("/srs", plantDataController.getSRS);
+router.get("/meower", plantDataController.Meower);
 exports.default = router;

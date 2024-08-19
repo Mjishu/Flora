@@ -26,6 +26,26 @@ VALUES
 ('meower','meower.png'),
 ('milkweed','milkweed.png');
 `;
+function sortData(data) {
+    return data.map((entry) => ({
+        common_name: entry.common_name,
+        image_url: entry.image_url,
+        scientific_name: entry.scientific_name,
+        rank: entry.rank,
+        family_common_name: entry.family_common_name,
+        genus: entry.genus,
+        family: entry.family,
+    }));
+}
+;
+function callTrefle() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const url = `https://trefle.io/api/v1/plants?token=${process.env.TREFLE_TOKEN}&filter[distribution]=florida&filter[plant_type]=tree`;
+        const response = yield fetch(url);
+        const json = yield response.json();
+        const mapped = sortData(json.data);
+    });
+}
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("seeding...");

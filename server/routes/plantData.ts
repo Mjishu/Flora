@@ -5,7 +5,9 @@ import * as plantDataController from "../controllers/plantDataController";
 
 router.get("/florida-trees", plantDataController.floridaTrees);
 
-router.get("/srs", plantDataController.getSRS)
+router.post("/srs", plantDataController.getSRS)
+
+router.get("/meower", plantDataController.Meower)
 
 export default router
 

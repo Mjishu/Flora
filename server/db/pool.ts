@@ -1,4 +1,5 @@
-import { Pool } from "pg";
+import pg from "pg";
+const { Pool } = pg
 
 const pool = new Pool({
     user: "root",
@@ -8,4 +9,10 @@ const pool = new Pool({
     port: 5432,
 })
 
-export default pool
+export const query = (text: string, params: any) => {
+    return pool.query(text, params)
+}
+
+export const getClient = () => {
+    return pool.connect()
+}

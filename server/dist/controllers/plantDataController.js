@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.floridaTrees = void 0;
+exports.Meower = exports.floridaTrees = void 0;
 exports.getFloridaTrees = getFloridaTrees;
 exports.getSRS = getSRS;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
@@ -43,24 +43,9 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const db = __importStar(require("../db/queries"));
 const srs_1 = __importDefault(require("../srs"));
-function sortData(data) {
-    return data.map((entry) => ({
-        common_name: entry.common_name,
-        image_url: entry.image_url,
-        scientific_name: entry.scientific_name,
-        rank: entry.rank,
-        family_common_name: entry.family_common_name,
-        genus: entry.genus,
-        family: entry.family,
-    }));
-}
-;
 exports.floridaTrees = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const url = `https://trefle.io/api/v1/plants?token=${process.env.TREFLE_TOKEN}&filter[distribution]=florida&filter[plant_type]=tree`;
-    const response = yield fetch(url);
-    const json = yield response.json();
-    const mapped = sortData(json.data); //How to put this data in the database?
-    res.send(mapped); //instead of sending this put it db and then send db entries to frontend
+    //How to put this data in the database?
+    res.json({ message: "finding trees" }); //instead of sending this put it db and then send db entries to frontend
 }));
 function getFloridaTrees(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -80,3 +65,6 @@ function getSRS(req, res) {
         res.send((0, srs_1.default)(previous, evaluation));
     });
 }
+exports.Meower = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.json("Im such a meower");
+}));
