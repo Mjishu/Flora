@@ -59,9 +59,13 @@ exports.createUser = (0, express_async_handler_1.default)((req, res) => __awaite
         password: hash, //!Change to BCRYPT
         email: body.email,
     };
-    //? Do I do a db.query  where i insert the information into the db as paramters?
-    console.log(req.body);
-    res.json(newUser);
+    const userEntry = yield db.query('INSERT INTO users (username,password,email) VALUES ($1,$2,$3) RETURNING *', [newUser.username, newUser.password, newUser.email]);
+    if (userEntry.rows[0]) {
+        res.json({ message: "success" });
+    }
+    else {
+        res.json({ message: "fail" });
+    }
 }));
 exports.loginUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("recieved login details");

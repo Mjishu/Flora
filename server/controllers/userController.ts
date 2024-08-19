@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 import dotenv from 'dotenv';
 dotenv.config();
-import { Request, Response } from "express";
+import e, { Request, Response } from "express";
 import * as db from "../db/pool"
 import bcrypt from "bcrypt";
 
@@ -24,9 +24,14 @@ export const createUser = asyncHandler(async (req, res) => {
         password: hash,//!Change to BCRYPT
         email: body.email,
     }
-    //? Do I do a db.query  where i insert the information into the db as paramters?
-    console.log(req.body)
-    res.json(newUser)
+    const userEntry = await db.query('INSERT INTO users (username,password,email) VALUES ($1,$2,$3) RETURNING *',
+        [newUser.username, newUser.password, newUser.email]
+    )
+    if (userEntry.rows[0]) {
+        res.json({ message: "success" })
+    } else {
+        res.json({ message: "fail" })
+    }
 })
 
 
