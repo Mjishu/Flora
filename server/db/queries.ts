@@ -1,7 +1,7 @@
-import pool from "./pool";
+import * as pool from "./pool";
 
 async function getAllCommonNames() {
-    const { rows } = await pool.query("SELECT * FROM florida_plants");
+    const { rows } = await pool.query("SELECT * FROM florida_plants", "");
     return rows;
 }
 

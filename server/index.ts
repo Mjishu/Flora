@@ -6,6 +6,11 @@ import http from "http"
 import cookieParser from "cookie-parser"
 import logger from "morgan"
 
+import session from "express-session";
+import passport from "passport";
+import LocalStrategy from "passport-local";
+
+
 import dotenv from "dotenv"
 
 dotenv.config()
@@ -28,6 +33,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(logger("dev"));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    saveUninitialized: false,
+    resave: false,
+    cookie: { maxAge: 6000 * 60 }
+}))
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 import plantData from "./routes/plantData"

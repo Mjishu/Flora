@@ -1,9 +1,11 @@
 import asyncHandler from "express-async-handler";
 import dotenv from 'dotenv';
-dotenv.config();
-import e, { Request, Response } from "express";
 import * as db from "../db/pool"
 import bcrypt from "bcrypt";
+import passport from "passport";
+import "./auth/local-strategy"
+
+dotenv.config();
 
 export const getUser = asyncHandler(async (req, res) => {
     const result = await db.query('SELCECT * FROM users WHERE username = $1', [req.params.username])
@@ -44,11 +46,15 @@ export const loginUser = asyncHandler(async (req, res) => {
         console.log("incorrect username")
         return
     }
-    const match = await bcrypt.compare(req.body.password, userPassword)
+    const match = await bcrypt.compare(req.body.password, userPassword.rows[0].password)
     if (!match) {
         res.json({ message: "fail" })
         console.log("incorrect password")
         return
     }
     res.json({ message: `logging in user ${req.body.username}` })
+})
+
+export const userAuth = (passport.authenticate("local"), (request, response) => {
+
 })

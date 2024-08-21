@@ -31,18 +31,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllCommonNames = getAllCommonNames;
-exports.insertCommonName = insertCommonName;
-const pool = __importStar(require("./pool"));
-function getAllCommonNames() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { rows } = yield pool.query("SELECT * FROM florida_plants", "");
-        return rows;
-    });
-}
-function insertCommonName(name) {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield pool.query("INSERT INTO florida_plants (common_name) VALUES ($1)", [name]);
-    });
-}
+const passport_1 = __importDefault(require("passport"));
+const passport_local_1 = require("passport-local");
+const db = __importStar(require("../db/pool"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
+exports.default = passport_1.default.use(new passport_local_1.Strategy({ usernameField: "username" }, (username, password, done) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(username);
+    try {
+        const { rows } = yield db.query("SELECT * FROM users WHERE username = $1", [username]);
+        if (rows.length < 1)
+            throw new Error("User not fouhnd");
+        const match = yield bcrypt_1.default.compare(password, rows[0].password);
+        if (!match)
+            throw new Error("Invalid Credentials");
+        done(null, rows[0]);
+    }
+    catch (err) {
+        return done(err, null);
+    }
+})));

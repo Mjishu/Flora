@@ -8,6 +8,8 @@ const cors_1 = __importDefault(require("cors"));
 const path_1 = __importDefault(require("path"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const morgan_1 = __importDefault(require("morgan"));
+const express_session_1 = __importDefault(require("express-session"));
+const passport_1 = __importDefault(require("passport"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -26,6 +28,14 @@ app.use(express_1.default.urlencoded({ extended: false }));
 app.use((0, morgan_1.default)("dev"));
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
+app.use((0, express_session_1.default)({
+    secret: process.env.SESSION_SECRET,
+    saveUninitialized: false,
+    resave: false,
+    cookie: { maxAge: 6000 * 60 }
+}));
+app.use(passport_1.default.initialize());
+app.use(passport_1.default.session());
 const plantData_1 = __importDefault(require("./routes/plantData"));
 const user_1 = __importDefault(require("./routes/user"));
 app.use("/api/plants/", plantData_1.default);

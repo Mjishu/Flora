@@ -35,12 +35,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUser = exports.createUser = exports.getUser = void 0;
+exports.userAuth = exports.loginUser = exports.createUser = exports.getUser = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
 const db = __importStar(require("../db/pool"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const passport_1 = __importDefault(require("passport"));
+require("./auth/local-strategy");
+dotenv_1.default.config();
 exports.getUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield db.query('SELCECT * FROM users WHERE username = $1', [req.params.username]);
     res.send("User is getting ready!");
@@ -76,7 +78,7 @@ exports.loginUser = (0, express_async_handler_1.default)((req, res) => __awaiter
         console.log("incorrect username");
         return;
     }
-    const match = yield bcrypt_1.default.compare(req.body.password, userPassword);
+    const match = yield bcrypt_1.default.compare(req.body.password, userPassword.rows[0].password);
     if (!match) {
         res.json({ message: "fail" });
         console.log("incorrect password");
@@ -84,3 +86,5 @@ exports.loginUser = (0, express_async_handler_1.default)((req, res) => __awaiter
     }
     res.json({ message: `logging in user ${req.body.username}` });
 }));
+exports.userAuth = (passport_1.default.authenticate("local"), (request, response) => {
+});
