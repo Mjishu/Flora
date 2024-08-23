@@ -1,7 +1,7 @@
 import express from "express"
 const router = express.Router()
 
-import * as plantDataController from "../controllers/plantDataController";
+import * as plantDataController from "../controllers/plantDataController.js";
 
 router.get("/florida-trees", plantDataController.floridaTrees);
 

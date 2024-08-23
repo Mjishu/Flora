@@ -1,10 +1,10 @@
 import asyncHandler from "express-async-handler";
 import dotenv from 'dotenv';
 dotenv.config();
-import * as db from "../db/queries";
+import * as db from "../db/queries.js";
 import { Client } from "pg";
 import { Response, Request } from "express"
-import srsFunc from "../srs";
+import srsFunc from "../srs.js";
 
 
 

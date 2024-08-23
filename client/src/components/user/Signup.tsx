@@ -21,7 +21,7 @@ function Signup() {
             })
         }
 
-        fetch("/api/users/signup", fetchParams) //! CORS issue? or what bc i can find it when i type the address in browser?
+        fetch("/api/users/register", fetchParams) //! CORS issue? or what bc i can find it when i type the address in browser?
             .then(res => res.json())
             .then(data => console.log(data))
             .catch(error => console.error(`error trying to create account, ${error}`))

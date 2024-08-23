@@ -8,7 +8,7 @@ import logger from "morgan"
 
 import session from "express-session";
 import passport from "passport";
-import LocalStrategy from "passport-local";
+import { usePassportStrategy } from "./auth/passport.js";
 
 
 import dotenv from "dotenv"
@@ -27,6 +27,8 @@ const corsOptions: CorsOptions = {
     optionsSuccessStatus: 200
 }
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -35,18 +37,20 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || "secret", //! Make this more secure?
     saveUninitialized: false,
     resave: false,
     cookie: { maxAge: 6000 * 60 }
 }))
 
+usePassportStrategy(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
 
-import plantData from "./routes/plantData"
-import userData from "./routes/user"
+import plantData from "./routes/plantData.js"
+import userData from "./routes/user.js"
+import { fileURLToPath } from "url";
 
 app.use("/api/plants/", plantData)
 app.use("/api/users/", userData)

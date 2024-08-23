@@ -10,7 +10,7 @@ const routes = [
         errorElement: <Error />
     },
     {
-        path: "/signup",
+        path: "/register",
         element: <Signup />
     },
     {
