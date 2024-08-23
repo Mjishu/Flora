@@ -3,8 +3,7 @@ import path from "path";
 import fs from "fs";
 
 import { Strategy as JwtStrategy, ExtractJwt, StrategyOptions } from "passport-jwt";
-import passport, { PassportStatic } from "passport";
-import { Pool } from "pg";
+import passport from "passport";
 
 
 const pathToKey = path.join("./auth", "id_rsa_pub.pem");
@@ -34,22 +33,7 @@ const options: StrategyOptions = {
 
 export const usePassportStrategy = (passport: PassportStatic) => {
     passport.use("jwt", strategy)
-}
-
-/*passport.use(new JwtStrategy(options, async (jwt_paylod, done) => {
-    try {
-        const result = await db.query("SELECT * FROM users WHERE id = $1", [jwt_paylod.sub])
-        if (result.rows.length > 0) {
-            return done(null, result.rows[0])
-        } else {
-            return done(null, false);
-        }
-    } catch (err) {
-        return done(err, false)
-    }
-}))
-
-export default passport*/
+}*/
 
 passport.use(
     new JwtStrategy(options, async (payload, done) => {

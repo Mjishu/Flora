@@ -27,22 +27,7 @@ const options = {
 
 export const usePassportStrategy = (passport: PassportStatic) => {
     passport.use("jwt", strategy)
-}
-
-/*passport.use(new JwtStrategy(options, async (jwt_paylod, done) => {
-    try {
-        const result = await db.query("SELECT * FROM users WHERE id = $1", [jwt_paylod.sub])
-        if (result.rows.length > 0) {
-            return done(null, result.rows[0])
-        } else {
-            return done(null, false);
-        }
-    } catch (err) {
-        return done(err, false)
-    }
-}))
-
-export default passport*/
+}*/
 passport.use(new JwtStrategy(options, async (payload, done) => {
     try {
         const { rows } = await db.query("SELECT * FROM users WHERE id = $1", [payload.sub]);

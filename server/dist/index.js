@@ -4,8 +4,7 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import session from "express-session";
-import passport from "passport";
-import { usePassportStrategy } from "./auth/passport.js";
+import passport from "./auth/passport.js";
 import dotenv from "dotenv";
 dotenv.config();
 const app = express();
@@ -31,7 +30,6 @@ app.use(session({
     resave: false,
     cookie: { maxAge: 6000 * 60 }
 }));
-usePassportStrategy(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 import plantData from "./routes/plantData.js";
