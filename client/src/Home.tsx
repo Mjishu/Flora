@@ -2,7 +2,9 @@ import React from 'react'
 import './App.css'
 import Card from './components/Card';
 import Navbar from './components/Navbar';
+import authService from './auth/authService';
 
+const AuthService = new authService();
 interface Tree {
   id: number;
   common_name: string;
@@ -17,6 +19,7 @@ interface Tree {
 function Home() {
   const [floridaTrees, setFloridaTrees] = React.useState<Tree[] | null>(null);
   const [plantNumber, setPlantNumber] = React.useState(0)
+  const [loggedIn, setLoggedIn] = React.useState("");
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
@@ -27,16 +30,35 @@ function Home() {
       .finally(() => setLoading(false))
   }, [])
 
+  function checkSignedIn() {
+    const token = localStorage.getItem("token");
+    if (token == null) {
+      console.error("token does not exist")
+      return
+    }
+    const fetchParams = {
+      method: "GET",
+      headers: {
+        "Authorization": token
+      }
+    }
+    fetch("/api/users/protected", fetchParams)
+      .then(res => res.json())
+      .then(data => data.success && setLoggedIn(data.message))
+      .catch(err => console.error(`Error fetching protected route ${err}`))
+  }
+
   if (loading) {
     return <h1>App is loading</h1>
   }
-
-
 
   return (
     <>
       <Navbar />
       <p>Welcome to flora</p>
+      <button onClick={checkSignedIn}>Check logged in status</button>
+      <button onClick={() => AuthService.logout()}>Logout</button>
+      <h2>{loggedIn}</h2>
       {/*floridaTrees && <Card
         plantNumber={plantNumber}
         setPlantNumber={setPlantNumber}

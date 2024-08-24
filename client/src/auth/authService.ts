@@ -5,12 +5,12 @@ export default class authService {
         const expires = moment().add(responseObj.expiresIn, "day")
 
         localStorage.setItem("token", responseObj.token)
-        localStorage.setItem("expries", JSON.stringify(expires.valueOf()))
+        localStorage.setItem("expires", JSON.stringify(expires.valueOf()))
     }
 
     logout() {
         localStorage.removeItem("token");
-        localStorage.removeItem('expires');
+        localStorage.removeItem("expires");
     }
 
     isLoggedIn() {
