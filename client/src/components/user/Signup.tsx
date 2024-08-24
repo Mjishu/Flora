@@ -1,7 +1,11 @@
-import React from 'react'
-import style from "../../styles/authentication.module.css"
+import React from 'react';
+import style from "../../styles/authentication.module.css";
+import authService from '../../auth/authService';
+const AuthService = new authService();
+import { useNavigate } from 'react-router-dom';
 
 function Signup() {
+    const navigate = useNavigate();
     const [userInfo, setUserInfo] = React.useState({
         username: "",
         password: "",
@@ -23,7 +27,10 @@ function Signup() {
 
         fetch("/api/users/register", fetchParams) //! CORS issue? or what bc i can find it when i type the address in browser?
             .then(res => res.json())
-            .then(data => console.log(data))
+            .then(data => {
+                AuthService.setLocalStorage(data)
+                data.success && navigate("/")
+            })
             .catch(error => console.error(`error trying to create account, ${error}`))
     }
 

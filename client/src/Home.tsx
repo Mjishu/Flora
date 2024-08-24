@@ -37,13 +37,13 @@ function Home() {
     <>
       <Navbar />
       <p>Welcome to flora</p>
-      {floridaTrees && <Card
+      {/*floridaTrees && <Card
         plantNumber={plantNumber}
         setPlantNumber={setPlantNumber}
         common_name={floridaTrees[plantNumber].common_name}
         image={floridaTrees[plantNumber].image_url}
         plantsLength={floridaTrees.length}
-      />}
+      />*/}
     </>
   )
 }

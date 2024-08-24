@@ -1,7 +1,11 @@
-import React from 'react'
-import style from "../../styles/authentication.module.css"
+import React from 'react';
+import style from "../../styles/authentication.module.css";
+import authService from '../../auth/authService';
+const AuthService = new authService();
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
+    const navigate = useNavigate();
     const [userInfo, setUserInfo] = React.useState({
         username: "",
         password: "",
@@ -22,8 +26,12 @@ function Login() {
 
         fetch("/api/users/login", fetchParams)
             .then(res => res.json())
-            .then(data => console.log(data))
+            .then(data => {
+                AuthService.setLocalStorage(data)
+                data.success == true && navigate("/")
+            })
             .catch(error => console.error(`error trying to login to  account, ${error}`))
+
     }
 
     function handleChange(e: any) {
