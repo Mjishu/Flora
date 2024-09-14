@@ -7,37 +7,52 @@ type CardProps = {
     plantNumber: number;
     setPlantNumber: (value: (prevNumber: number) => number) => void;
     plantsLength: number;
+    handleKnown: any;
+    handleUnknown: any;
 }
 
-export default function Card(props: CardProps) {
-    const [known, setKnown] = React.useState(false)
-
-    function handleKnown() {
-        setKnown(true)
-        if (props.plantNumber >= props.plantsLength) { //!How to set plantNumber back down to 0?w
-            console.log("Hit max plants")
-            props.setPlantNumber((prevNumber: number) => 0)
-        }
-        props.setPlantNumber((prevNumber: number) => prevNumber + 1)
-    }
-
-    function handleUnknown() {
-        setKnown(false)
-        if (props.plantNumber >= props.plantsLength) {
-            props.setPlantNumber((prevNumber: number) => 0)
-        }
-        //setPlantNumber((prevNumber: number) => prevNumber += 1)
-    }
+export function Card(props: CardProps) {
 
     return (
         <div>
             <h3>{props.common_name}</h3>
-            {props.image && <img src={props.image} className={style.CardImage} />}
+            {props.image && <img src={props.image} className={`${style.CardImage} shadow2`} />}
             <div className={style.buttonHolder}>
-                <button className={`${style.answerButton} ${style.buttonKnown}`} onClick={handleKnown}>Know</button>
-                <button className={`${style.answerButton} ${style.buttonUnknown}`} onClick={handleUnknown}>Don't Know</button>
+                <button className={`${style.answerButton} shadow1`} onClick={props.handleUnknown}>
+                    <span className={style.answerButtonUnknown}>
+                        <img className={style.buttonSvg} src="/icons/X.svg" alt="Unknown" />
+                    </span>
+                </button>
+                <button className={`${style.answerButton} shadow1`} onClick={props.handleKnown}>
+                    <span className={style.answerButtonKnown}>
+                        <img className={style.buttonSvg} src="/icons/Checkmark.svg" alt="Known" />
+                    </span>
+                </button>
             </div>
 
         </div>
     )
-} 
+}
+
+export function ReverseCard(props: CardProps) {
+
+    return (
+        <div>
+            <h3>{props.common_name}</h3>
+            {props.image && <img src={props.image} className={`${style.CardImage} shadow2`} />}
+            <div className={style.buttonHolder}>
+                <button className={`${style.answerButton} shadow1`} onClick={props.handleUnknown}>
+                    <span className={style.answerButtonUnknown}>
+                        <img className={style.buttonSvg} src="/icons/X.svg" alt="Unknown" />
+                    </span>
+                </button>
+                <button className={`${style.answerButton} shadow1`} onClick={props.handleKnown}>
+                    <span className={style.answerButtonKnown}>
+                        <img className={style.buttonSvg} src="/icons/Checkmark.svg" alt="Known" />
+                    </span>
+                </button>
+            </div>
+
+        </div>
+    )
+}

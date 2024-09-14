@@ -1,48 +1,41 @@
 .buttonHolder {
     display: flex;
     flex-direction: row;
-    gap: 1.5rem;
-    width: 12.5rem;
+    width: 30rem;
+    gap: 3rem;
+    margin-top: 1.125rem;
 }
 
 .answerButton {
     border: none;
     background-color: hsl(var(--off-white));
     border-radius: 5px;
-    width: 5rem;
-    height: 1.5rem;
-    box-shadow: 0 0 5px #2b2b2b36;
+    width: 13.75rem; 
+    height: 3.75rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .CardImage {
-    width: 25rem;
+    width: 30rem;
     height: auto;
+    border-radius: 5px;
+    border: none;
 }
 
 /** Button styles*/
 
-.buttonKnown {
+.answerButtonKnown {
     color: hsl(var(--green));
 }
 
-.buttonKnown:active {
-    color: hsl(var(--off-white));
-    background-color: hsl(var(--green));
-}
 
-.buttonKnown:hover {
-    box-shadow: 0 0 5px hsla(var(--green), 0.5);
-}
-
-.buttonUnknown {
+.answerButtonUnknown {
     color: hsl(var(--red));
 }
 
-.buttonUnknown:active {
-    color: hsl(var(--off-white));
-    background-color: hsl(var(--red));
-}
-
-.buttonUnknown:hover {
-    box-shadow: 0 0 5px hsl(var(--red), 0.5);
+.buttonSvg{
+    width: 50px;
+    height: 50px;
 }
