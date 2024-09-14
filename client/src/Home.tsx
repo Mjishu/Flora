@@ -21,7 +21,7 @@ function Home() {
   const [plantNumber, setPlantNumber] = React.useState(0)
   const [loggedIn, setLoggedIn] = React.useState("");
   const [loading, setLoading] = React.useState(true);
-  const [spacePressed, setSpacePressed] = React.useState(false);
+  const [cardFlipped, setcardFlipped] = React.useState(false);
   const [cardKnown, setCardKnown] = React.useState(false);
   const [arrows, setArrows] = React.useState({
     rightArrow: false,
@@ -39,7 +39,7 @@ function Home() {
   React.useEffect(() => {
     function handleCardFlip(e: KeyboardEvent): void {
       if (e.code === "Space" || e.key === " ") {
-        setSpacePressed(prevSpace => !prevSpace)
+        setcardFlipped(prevSpace => !prevSpace)
       }
     }
     document.addEventListener("keydown", handleCardFlip);
@@ -107,6 +107,15 @@ function Home() {
 
   function handleKnownCard(): void {
     if (!floridaTrees) { return }
+    const fetchParams = {
+      method: "post", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ plantName: floridaTrees[plantNumber].common_name, seen: true })
+    }
+    fetch("/api/cards/know", fetchParams)
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(err => console.error(`error sending card back: ${err}`))
+
     if (plantNumber >= floridaTrees.length - 1) {
       setPlantNumber(0)
     }
@@ -115,10 +124,23 @@ function Home() {
 
   function handleUnknownCard(): void {
     if (!floridaTrees) { return }
+    const fetchParams = {
+      method: "post", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ plantName: floridaTrees[plantNumber].common_name, seen: false })
+    }
+    fetch("/api/cards/unknown", fetchParams)
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(err => console.error(`error sending card back: ${err}`))
+
     if (plantNumber >= floridaTrees.length - 1) {
       setPlantNumber(0)
     }
     setPlantNumber((prevNumber: number) => prevNumber + 1);
+  }
+
+  function flipCard(): void {
+    setcardFlipped(!cardFlipped)
   }
 
   return (
@@ -128,7 +150,7 @@ function Home() {
       <button onClick={checkSignedIn}>Check logged in status</button>
       <button onClick={() => AuthService.logout()}>Logout</button>
       <h2>{loggedIn}</h2>
-      {!spacePressed ? <Card
+      {!cardFlipped ? <Card
         plantNumber={plantNumber}
         setPlantNumber={setPlantNumber}
         common_name={floridaTrees[plantNumber].common_name}
@@ -136,16 +158,21 @@ function Home() {
         plantsLength={floridaTrees.length}
         handleKnown={handleKnownCard}
         handleUnknown={handleUnknownCard}
+        cardFlipped={flipCard}
       />
         :
         <ReverseCard
           plantNumber={plantNumber}
           setPlantNumber={setPlantNumber}
           common_name={floridaTrees[plantNumber].common_name}
-          image={floridaTrees[plantNumber].image_url}
+          scientific_name={floridaTrees[plantNumber].scientific_name}
+          genus={floridaTrees[plantNumber].genus}
+          family={floridaTrees[plantNumber].family}
           plantsLength={floridaTrees.length}
           handleKnown={handleKnownCard}
           handleUnknown={handleUnknownCard}
+          cardFlipped={flipCard}
+
         />
       }
 

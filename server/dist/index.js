@@ -34,9 +34,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 import plantData from "./routes/plantData.js";
 import userData from "./routes/user.js";
+import cardData from "./routes/card.js";
 import { fileURLToPath } from "url";
 app.use("/api/plants/", plantData);
 app.use("/api/users/", userData);
+app.use("/api/cards/", cardData);
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
 });

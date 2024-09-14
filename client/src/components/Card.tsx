@@ -9,6 +9,20 @@ type CardProps = {
     plantsLength: number;
     handleKnown: any;
     handleUnknown: any;
+    cardFlipped: any;
+}
+
+type reverseCardProps = {
+    common_name: string;
+    plantNumber: number;
+    setPlantNumber: (value: (prevNumber: number) => number) => void;
+    plantsLength: number;
+    handleKnown: any;
+    handleUnknown: any;
+    genus: string;
+    scientific_name: string;
+    family: string;
+    cardFlipped: any
 }
 
 export function Card(props: CardProps) {
@@ -16,7 +30,9 @@ export function Card(props: CardProps) {
     return (
         <div>
             <h3>{props.common_name}</h3>
-            {props.image && <img src={props.image} className={`${style.CardImage} shadow2`} />}
+            {props.image && <button className={style.imageButton} onClick={props.cardFlipped}>
+                <img src={props.image} className={`${style.CardImage} shadow2`} />
+            </button>}
             <div className={style.buttonHolder}>
                 <button className={`${style.answerButton} shadow1`} onClick={props.handleUnknown}>
                     <span className={style.answerButtonUnknown}>
@@ -34,12 +50,34 @@ export function Card(props: CardProps) {
     )
 }
 
-export function ReverseCard(props: CardProps) {
+export function ReverseCard(props: reverseCardProps) {
 
     return (
         <div>
-            <h3>{props.common_name}</h3>
-            {props.image && <img src={props.image} className={`${style.CardImage} shadow2`} />}
+            <button className={style.imageButton} onClick={props.cardFlipped}>
+                <div className={`${style.reverseCard}`}>
+                    <div>
+                        <h4>Common Name</h4>
+                        <hr />
+                        <h4>{props.common_name}</h4>
+                    </div>
+                    <div>
+                        <h5>Scientific Name</h5>
+                        <hr />
+                        <h5>{props.scientific_name}</h5>
+                    </div>
+                    <div>
+                        <p>Genus</p>
+                        <hr />
+                        <p> {props.genus}</p>
+                    </div>
+                    <div>
+                        <p>Family</p>
+                        <hr />
+                        <p>{props.family}</p>
+                    </div>
+                </div>
+            </button>
             <div className={style.buttonHolder}>
                 <button className={`${style.answerButton} shadow1`} onClick={props.handleUnknown}>
                     <span className={style.answerButtonUnknown}>
@@ -53,6 +91,6 @@ export function ReverseCard(props: CardProps) {
                 </button>
             </div>
 
-        </div>
+        </div >
     )
 }
