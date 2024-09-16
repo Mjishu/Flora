@@ -7,17 +7,16 @@ import authService from './auth/authService';
 const AuthService = new authService();
 interface Tree {
   id: number;
+  image_url: string;
   common_name: string;
   scientific_name: string;
-  rank: string;
-  family_common_name: string;
-  image_url: string;
   genus: string;
   family: string;
+  description: string;
 }
 
 function Home() {
-  const [floridaTrees, setFloridaTrees] = React.useState<Tree[] | null>(null);
+  const [sePlantsNa, setsePlantsNa] = React.useState<Tree[] | null>(null);
   const [plantNumber, setPlantNumber] = React.useState(0)
   const [loggedIn, setLoggedIn] = React.useState("");
   const [loading, setLoading] = React.useState(true);
@@ -29,9 +28,9 @@ function Home() {
   })
 
   React.useEffect(() => {
-    fetch("/api/plants/florida-trees")
+    fetch("/api/plants/northAmerica/southEast")
       .then(res => res.json())
-      .then(data => setFloridaTrees(data))
+      .then(data => setsePlantsNa(data))
       .catch(err => console.error(`error fetching florida trees: ${err}`)) //network error?
       .finally(() => setLoading(false))
   }, [])
@@ -78,12 +77,18 @@ function Home() {
     }
   }, [arrows])
 
+  React.useEffect(() => {
+    if (!sePlantsNa) { return }
+    console.log(`The plant number is: ${plantNumber}`)
+    console.log(sePlantsNa[plantNumber])
+  }, [plantNumber])
+
 
   if (loading) {
     return <h1>App is loading</h1>
   }
 
-  if (!floridaTrees || floridaTrees.length < 1) {
+  if (!sePlantsNa || sePlantsNa.length < 1) {
     return <h1>Cannot find data</h1>
   }
 
@@ -106,37 +111,39 @@ function Home() {
   }
 
   function handleKnownCard(): void {
-    if (!floridaTrees) { return }
+    if (!sePlantsNa) { return }
     const fetchParams = {
       method: "post", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ plantName: floridaTrees[plantNumber].common_name, seen: true })
+      body: JSON.stringify({ plantName: sePlantsNa[plantNumber].common_name, seen: true })
     }
     fetch("/api/cards/know", fetchParams)
       .then(res => res.json())
       .then(data => console.log(data))
       .catch(err => console.error(`error sending card back: ${err}`))
 
-    if (plantNumber >= floridaTrees.length - 1) {
+    setPlantNumber((prevNumber: number) => prevNumber + 1);
+    if (plantNumber >= sePlantsNa.length - 1) {
       setPlantNumber(0)
     }
-    setPlantNumber((prevNumber: number) => prevNumber + 1);
+    setcardFlipped(false);
   }
 
   function handleUnknownCard(): void {
-    if (!floridaTrees) { return }
+    if (!sePlantsNa) { return }
     const fetchParams = {
       method: "post", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ plantName: floridaTrees[plantNumber].common_name, seen: false })
+      body: JSON.stringify({ plantName: sePlantsNa[plantNumber].common_name, seen: false })
     }
     fetch("/api/cards/unknown", fetchParams)
       .then(res => res.json())
       .then(data => console.log(data))
       .catch(err => console.error(`error sending card back: ${err}`))
 
-    if (plantNumber >= floridaTrees.length - 1) {
+    setPlantNumber((prevNumber: number) => prevNumber + 1);
+    if (plantNumber >= sePlantsNa.length - 1) {
       setPlantNumber(0)
     }
-    setPlantNumber((prevNumber: number) => prevNumber + 1);
+    setcardFlipped(false);
   }
 
   function flipCard(): void {
@@ -153,9 +160,9 @@ function Home() {
       {!cardFlipped ? <Card
         plantNumber={plantNumber}
         setPlantNumber={setPlantNumber}
-        common_name={floridaTrees[plantNumber].common_name}
-        image={floridaTrees[plantNumber].image_url}
-        plantsLength={floridaTrees.length}
+        common_name={sePlantsNa[plantNumber].common_name}
+        image={sePlantsNa[plantNumber].image_url}
+        plantsLength={sePlantsNa.length}
         handleKnown={handleKnownCard}
         handleUnknown={handleUnknownCard}
         cardFlipped={flipCard}
@@ -164,15 +171,15 @@ function Home() {
         <ReverseCard
           plantNumber={plantNumber}
           setPlantNumber={setPlantNumber}
-          common_name={floridaTrees[plantNumber].common_name}
-          scientific_name={floridaTrees[plantNumber].scientific_name}
-          genus={floridaTrees[plantNumber].genus}
-          family={floridaTrees[plantNumber].family}
-          plantsLength={floridaTrees.length}
+          common_name={sePlantsNa[plantNumber].common_name}
+          scientific_name={sePlantsNa[plantNumber].scientific_name}
+          genus={sePlantsNa[plantNumber].genus}
+          family={sePlantsNa[plantNumber].family}
+          plantsLength={sePlantsNa.length}
           handleKnown={handleKnownCard}
           handleUnknown={handleUnknownCard}
           cardFlipped={flipCard}
-
+          description={sePlantsNa[plantNumber].description}
         />
       }
 

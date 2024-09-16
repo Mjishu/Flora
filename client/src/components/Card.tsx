@@ -22,7 +22,8 @@ type reverseCardProps = {
     genus: string;
     scientific_name: string;
     family: string;
-    cardFlipped: any
+    cardFlipped: any;
+    description: string;
 }
 
 export function Card(props: CardProps) {
@@ -76,6 +77,7 @@ export function ReverseCard(props: reverseCardProps) {
                         <hr />
                         <p>{props.family}</p>
                     </div>
+                    <p>{props.description}</p>
                 </div>
             </button>
             <div className={style.buttonHolder}>

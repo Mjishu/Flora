@@ -25,6 +25,10 @@ export const floridaTrees = asyncHandler(async (req, res, next) => {
     const mapped = sortData(json.data); //How to put this data in the database?
     res.send(mapped); //instead of sending this put it db and then send db entries to frontend
 });
+export async function se_plants_na(req, res) {
+    const plants = await db.getSETreesNA();
+    res.send(plants);
+}
 //*/
 export async function getFloridaTrees(req, res) {
     const common_names = await db.getAllCommonNames();
