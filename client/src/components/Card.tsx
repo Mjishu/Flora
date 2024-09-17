@@ -10,6 +10,7 @@ type CardProps = {
     handleKnown: any;
     handleUnknown: any;
     cardFlipped: any;
+
 }
 
 type reverseCardProps = {
@@ -24,15 +25,18 @@ type reverseCardProps = {
     family: string;
     cardFlipped: any;
     description: string;
+    is_invasive: boolean;
 }
 
 export function Card(props: CardProps) {
-
     return (
         <div>
             <h3>{props.common_name}</h3>
             {props.image && <button className={style.imageButton} onClick={props.cardFlipped}>
                 <img src={props.image} className={`${style.CardImage} shadow2`} />
+                {/* {props.is_invasive && <div className={style.invasiveHolder}>
+                    <p className={style.isInvasive}>Invasive</p>
+                </div>} */}
             </button>}
             <div className={style.buttonHolder}>
                 <button className={`${style.answerButton} shadow1`} onClick={props.handleUnknown}>
@@ -78,6 +82,7 @@ export function ReverseCard(props: reverseCardProps) {
                         <p>{props.family}</p>
                     </div>
                     <p>{props.description}</p>
+                    {props.is_invasive && <h6>Invasive</h6>}
                 </div>
             </button>
             <div className={style.buttonHolder}>

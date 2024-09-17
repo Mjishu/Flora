@@ -53,3 +53,21 @@
     border: 1px solid black;
     border-radius: 5px;
 }
+
+/* .invasiveHolder{
+    position:relative;
+    bottom:2.5rem;
+    left: 24rem;
+    background-color: hsl(var(--off-white));
+    width:5rem;
+    border-radius: 5px;
+    border: 3px solid hsl(var(--red));
+    height: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.isInvasive{
+
+} */

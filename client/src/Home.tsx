@@ -3,6 +3,7 @@ import './App.css'
 import { Card, ReverseCard } from './components/Card';
 import Navbar from './components/Navbar';
 import authService from './auth/authService';
+import { UseUser } from "./components/user/userContext"
 
 const AuthService = new authService();
 interface Tree {
@@ -13,15 +14,16 @@ interface Tree {
   genus: string;
   family: string;
   description: string;
+  is_invasive: boolean;
 }
 
 function Home() {
+  const { currentUser, currentUserRef, userLoading } = UseUser();
   const [sePlantsNa, setsePlantsNa] = React.useState<Tree[] | null>(null);
   const [plantNumber, setPlantNumber] = React.useState(0)
-  const [loggedIn, setLoggedIn] = React.useState("");
+  const [displayUser, setdisplayUser] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [cardFlipped, setcardFlipped] = React.useState(false);
-  const [cardKnown, setCardKnown] = React.useState(false);
   const [arrows, setArrows] = React.useState({
     rightArrow: false,
     leftArrow: false,
@@ -77,13 +79,6 @@ function Home() {
     }
   }, [arrows])
 
-  React.useEffect(() => {
-    if (!sePlantsNa) { return }
-    console.log(`The plant number is: ${plantNumber}`)
-    console.log(sePlantsNa[plantNumber])
-  }, [plantNumber])
-
-
   if (loading) {
     return <h1>App is loading</h1>
   }
@@ -93,21 +88,8 @@ function Home() {
   }
 
   function checkSignedIn() {
-    const token = localStorage.getItem("token");
-    if (token == null) {
-      console.error("token does not exist")
-      return
-    }
-    const fetchParams = {
-      method: "GET",
-      headers: {
-        "Authorization": token
-      }
-    }
-    fetch("/api/users/protected", fetchParams)
-      .then(res => res.json())
-      .then(data => data.success && setLoggedIn(data.message))
-      .catch(err => console.error(`Error fetching protected route ${err}`))
+    setdisplayUser(currentUser?.username)
+    console.log(`current user is ${JSON.stringify(currentUser)}`)
   }
 
   function handleKnownCard(): void {
@@ -156,7 +138,7 @@ function Home() {
       <p>Welcome to flora</p>
       <button onClick={checkSignedIn}>Check logged in status</button>
       <button onClick={() => AuthService.logout()}>Logout</button>
-      <h2>{loggedIn}</h2>
+      {displayUser && <h2>Your username is {displayUser}</h2>}
       {!cardFlipped ? <Card
         plantNumber={plantNumber}
         setPlantNumber={setPlantNumber}
@@ -180,6 +162,7 @@ function Home() {
           handleUnknown={handleUnknownCard}
           cardFlipped={flipCard}
           description={sePlantsNa[plantNumber].description}
+          is_invasive={sePlantsNa[plantNumber].is_invasive}
         />
       }
 
