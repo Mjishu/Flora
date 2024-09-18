@@ -12,6 +12,6 @@ export async function cardKnown(req: Request, res: Response) {
 }
 
 export async function cardUnknown(req: Request, res: Response) {
-    console.log(req.body)
+    srs.srsFunc(req.user.id, req.body.card_id, req.body.seen)
     res.json({ message: "You did not know this card" })
 }

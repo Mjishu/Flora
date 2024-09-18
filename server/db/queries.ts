@@ -37,7 +37,7 @@ export async function insertUserCardData(new_card: cardInterface) {
     return
 }
 
-export async function updateCardRelationStreak(n: number, user_id: string, card_id: string) {
-    await pool.query('update user_card_data set streak = $1 where user_id = $2 and card_id = $3', [n, user_id, card_id]);
+export async function updateCardRelationStreak(n: number, interval: number, user_id: string, card_id: string) {
+    await pool.query('update user_card_data set streak = $1, interval = $2 where user_id = $3 and card_id = $4', [n, interval, user_id, card_id]);
     return
 }

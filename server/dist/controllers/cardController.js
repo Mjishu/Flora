@@ -6,6 +6,6 @@ export async function cardKnown(req, res) {
     res.json({ message: "You knew this card" });
 }
 export async function cardUnknown(req, res) {
-    console.log(req.body);
+    srs.srsFunc(req.user.id, req.body.card_id, req.body.seen);
     res.json({ message: "You did not know this card" });
 }

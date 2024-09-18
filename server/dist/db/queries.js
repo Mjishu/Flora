@@ -22,7 +22,7 @@ export async function insertUserCardData(new_card) {
     ]);
     return;
 }
-export async function updateCardRelationStreak(n, user_id, card_id) {
-    await pool.query('update user_card_data set streak = $1 where user_id = $2 and card_id = $3', [n, user_id, card_id]);
+export async function updateCardRelationStreak(n, interval, user_id, card_id) {
+    await pool.query('update user_card_data set streak = $1, interval = $2 where user_id = $3 and card_id = $4', [n, interval, user_id, card_id]);
     return;
 }
