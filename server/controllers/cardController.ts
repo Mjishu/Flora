@@ -4,10 +4,10 @@ dotenv.config();
 import * as db from "../db/queries.js";
 import { Client } from "pg";
 import { Response, Request } from "express"
-import srsFunc from "../srs.js";
+import * as srs from "../srs.js";
 
 export async function cardKnown(req: Request, res: Response) {
-    console.log(req.body)
+    srs.srsFunc(req.user.id, req.body.card_id, req.body.seen)
     res.json({ message: "You knew this card" })
 }
 

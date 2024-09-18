@@ -92,13 +92,27 @@ function Home() {
     console.log(`current user is ${JSON.stringify(currentUser)}`)
   }
 
-  function handleKnownCard(): void {
-    if (!sePlantsNa) { return }
-    const fetchParams = {
-      method: "post", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ plantName: sePlantsNa[plantNumber].common_name, seen: true })
+  function handleKnownCard(): void { //todo On fetch set authroization token here 
+    const token = localStorage.getItem("token");
+
+    if (token == null) {
+      console.error("token does not exist");
+      return;
     }
-    fetch("/api/cards/know", fetchParams)
+
+    if (!sePlantsNa) { return }
+
+    const fetchParams = {
+      method: "post",
+      headers:
+      {
+        "Content-Type": "application/json",
+        Authorization: token
+      },
+      body: JSON.stringify({ card_id: sePlantsNa[plantNumber].id, seen: true })
+    }
+
+    fetch("/api/cards/known", fetchParams)
       .then(res => res.json())
       .then(data => console.log(data))
       .catch(err => console.error(`error sending card back: ${err}`))
@@ -111,10 +125,23 @@ function Home() {
   }
 
   function handleUnknownCard(): void {
+    const token = localStorage.getItem("token");
+
+    if (token == null) {
+      console.error("Token does not exist");
+      return;
+    }
+
     if (!sePlantsNa) { return }
+
     const fetchParams = {
-      method: "post", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ plantName: sePlantsNa[plantNumber].common_name, seen: false })
+      method: "post",
+      headers:
+      {
+        "Content-Type": "application/json",
+        Authorization: token
+      },
+      body: JSON.stringify({ card_id: sePlantsNa[plantNumber].id, seen: false })
     }
     fetch("/api/cards/unknown", fetchParams)
       .then(res => res.json())

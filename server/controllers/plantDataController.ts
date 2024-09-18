@@ -4,7 +4,7 @@ dotenv.config();
 import * as db from "../db/queries.js";
 import { Client } from "pg";
 import { Response, Request } from "express"
-import srsFunc from "../srs.js";
+import * as srs from "../srs.js";
 
 ///*
 function sortData(data: { [key: string]: any }[]): { [key: string]: any }[] {
@@ -38,17 +38,6 @@ export async function getFloridaTrees(req: Request, res: Response) {
     const common_names = await db.getAllCommonNames();
     console.log("common_names are ", common_names);
     res.send("common names: " + common_names.map((name: any) => name.common_name).join(", "))
-}
-
-
-export async function getSRS(req: Request, res: Response) {
-    const previous = {
-        N: 0, eFactor: 2.5, new: false, data: {}
-    }
-    const evaluation = {
-        lateness: 0, score: 5.0
-    }
-    res.send(srsFunc(previous, evaluation))
 }
 
 export const Meower = asyncHandler(async (req, res) => {
