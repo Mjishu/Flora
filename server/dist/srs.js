@@ -1,7 +1,7 @@
 import * as db from "./db/queries.js";
 async function cardRelationshipExists(user_id, card_id, seen) {
-    const cardExists = (await db.getUserCardData(user_id, card_id))[0];
-    if (!cardExists) {
+    const card = (await db.getUserCardData(user_id, card_id))[0];
+    if (!card) {
         const new_card = {
             user_id: user_id,
             card_id: card_id,
@@ -13,17 +13,35 @@ async function cardRelationshipExists(user_id, card_id, seen) {
         return;
     }
     if (seen) {
-        let newInterval = cardExists.interval;
-        if (isToday(cardExists.date_created)) {
-            if (cardExists.streak + 1 >= 2) {
+        let newInterval = card.interval;
+        if (isToday(card.date_created)) {
+            if (card.streak + 1 >= 2) {
                 newInterval = 1.0;
             }
+            else if (card.streak + 1 == 1) {
+                newInterval = 0.00695;
+            }
         }
-        await db.updateCardRelationStreak(cardExists.streak + 1, newInterval, cardExists.user_id, cardExists.card_id);
+        else {
+            //do some magic bc card was not seen first time today.
+        }
+        await db.updateCardRelationStreak(card.streak + 1, newInterval, card.user_id, card.card_id);
+    }
+    else if (!seen) {
+        let newInterval = card.interval;
+        let newStreak = card.streak;
+        if (isToday(card.date_created)) {
+            newInterval = 0.000695;
+            newStreak = 0;
+        }
+        else {
+            newInterval = 0.00695;
+            newStreak = 0;
+        }
+        await db.updateCardRelationStreak(newStreak, newInterval, card.user_id, card.card_id);
     }
 }
-function isToday(timestampInSeconds) {
-    const date = new Date(timestampInSeconds * 1000);
+function isToday(date) {
     const today = new Date();
     return (date.getDate() === today.getDate() &&
         date.getMonth() === today.getMonth() &&

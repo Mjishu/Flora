@@ -1,14 +1,13 @@
 import * as db from "./db/queries.js"
 
-//state is known or not known, N is # seen correctly in a row, eFactor is ease of recall, should output the same values but updated?
 /*
     - [x] check if card is new (date is today and n is < 2)
     - [x] if card is new, make a new entry into the user_card_data table with the current users id and the current cards id.
     - [x] else if the card is not new, find that entry in the user_card_data and update the information.
-    - [] if the card is seen for the 'first time' on the first day, make the next time it should be seen in 10 minutes~
-    - [] use the standard universal time? or whatever the one that is in seconds is? I think this would make it easier for the first day and then whenever I call the date I can 
-            Transform it into human readable dates
-    - [] if card has a streak >= 1 and then presses unknown: set the interval to 10 minutes OR if its the same day set the interval back down to 1 minute
+    - [x] if the card is seen for the 'first time' on the first day, make the next time it should be seen in 10 minutes~
+    - [x] if card has a streak >= 1 and then presses unknown: set the interval to 10 minutes OR if its the same day set the interval back down to 1 minute
+    - [] Check if card is ready to be sent i.e if the interval and date_lastseen matchup, How to add the interval to the last_seen property and check if that time has passed>?
+    - [] send card to front end if it is ready
  */
 
 interface new_card {
@@ -19,10 +18,15 @@ interface new_card {
     efactor: number;
 }
 
-async function cardRelationshipExists(user_id: string, card_id: string, seen: boolean) {
-    const cardExists = (await db.getUserCardData(user_id, card_id))[0]
+interface get_card extends new_card {
+    date_created: Date;
+    last_seen: Date;
+}
 
-    if (!cardExists) {
+async function cardRelationshipExists(user_id: string, card_id: string, seen: boolean) {
+    const card: get_card = (await db.getUserCardData(user_id, card_id))[0]
+
+    if (!card) {
         const new_card: new_card = {
             user_id: user_id,
             card_id: card_id,
@@ -34,18 +38,33 @@ async function cardRelationshipExists(user_id: string, card_id: string, seen: bo
         return
     }
     if (seen) {
-        let newInterval = cardExists.interval
-        if (isToday(cardExists.date_created)) {
-            if (cardExists.streak + 1 >= 2) {
+        let newInterval = card.interval
+        if (isToday(card.date_created)) {
+            if (card.streak + 1 >= 2) {
                 newInterval = 1.0
+            } else if (card.streak + 1 == 1) {
+                newInterval = 0.00695
             }
+        } else {
+            //do some magic bc card was not seen first time today.
         }
-        await db.updateCardRelationStreak(cardExists.streak + 1, newInterval, cardExists.user_id, cardExists.card_id);
+        await db.updateCardRelationStreak(card.streak + 1, newInterval, card.user_id, card.card_id);
+    }
+    else if (!seen) {
+        let newInterval: number = card.interval;
+        let newStreak: number = card.streak;
+        if (isToday(card.date_created)) {
+            newInterval = 0.000695;
+            newStreak = 0;
+        } else {
+            newInterval = 0.00695;
+            newStreak = 0;
+        }
+        await db.updateCardRelationStreak(newStreak, newInterval, card.user_id, card.card_id);
     }
 }
 
-function isToday(timestampInSeconds: number) {
-    const date = new Date(timestampInSeconds * 1000);
+function isToday(date: Date) {
     const today = new Date()
 
     return (
