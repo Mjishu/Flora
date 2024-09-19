@@ -17,7 +17,7 @@
             plus id be doing it for option 1 as well. 
         To me #1 makes the most sense now as you can preview the previous ones while also going back? maybe Id have to make 2 arrays one thats up to date and one ready
             for any redo buttons? idk this is in the future implementation
-        I could use UseMemo for the 1st implementation on the front end so that it only changes when the array changes? idk if this would be redundant though
+        I could use UseMemo for the 1st implementation on the front end so that it only changes when the array changes? idk if this would be redundant thoughf 
 
 ## Frontend
 

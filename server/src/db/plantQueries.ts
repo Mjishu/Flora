@@ -48,3 +48,13 @@ export async function last_seenToUnix(card_id: string, user_id: string) {//* isn
     //const { rows } = await pool.query("SELECT date_created FROM user_card_data WHERE user_id = $1 AND card_id = $2;", [user_id, card_id]);
     return rows;
 }
+
+export async function cardsReady(user_id: string) {
+    const { rows } = await pool.query("SELECT p.* FROM plants p JOIN user_card_data u ON p.id = u.card_id WHERE u.user_id = $1 AND NOW() >= (u.last_seen + interval '1 second' * (u.interval * 86400))", [user_id])
+    return rows
+}
+
+export async function unseenCards(user_id: string) {
+    const { rows } = await pool.query("SELECT p.* FROM plants p LEFT JOIN user_card_data u ON p.id = u.card_id AND u.user_id = $1 WHERE u.card_id IS NULL;", [user_id])
+    return rows;
+}

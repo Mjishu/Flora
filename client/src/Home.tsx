@@ -30,7 +30,10 @@ function Home() {
   })
 
   React.useEffect(() => {
-    fetch("/api/plants/na/south-east")
+    const token = localStorage.getItem("token")
+    if (!token) { return console.log("You are not logged in") }
+
+    fetch("/api/plants/na/south-east", { method: "GET", headers: { Authorization: token } }) //* adding the auth part made it break?
       .then(res => res.json()).then(data => setsePlantsNa(data)).catch(err => console.error(`error fetching plants: ${err}`))
       .finally(() => setLoading(false))
   }, [])

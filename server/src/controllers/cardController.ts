@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 import dotenv from 'dotenv';
 dotenv.config();
-import * as db from "../db/queries.js";
+import * as db from "../db/plantQueries.js";
 import { Client } from "pg";
 import { Response, Request } from "express"
 import * as srs from "../srs.js";
@@ -30,5 +30,5 @@ export async function isCardReady(req: Request, res: Response) {
         res.json({ message: "User is not logged in", success: false })
         return
     }
-    srs.readyForReview(req.user.id, req.body.card_id)
+    // srs.readyForReview(req.user.id, req.body.card_id)
 }

@@ -1,4 +1,4 @@
-import * as db from "./db/queries.js";
+import * as db from "./db/plantQueries.js";
 import * as pool from "./db/pool.js";
 
 /*
@@ -81,24 +81,14 @@ export async function srsFunc(user_id: string, card_id: string, seen: boolean) {
 }
 
 
-export async function readyForReview(user_id: string, card_id: string) { //? Where is this going to be called? because it should be either polled or called on reload, 
-    //? If i call it just on card change youd never see the card again
-    const result = await db.last_seenToUnix(card_id, user_id);
-    const lastSeenUnix = Math.floor(parseFloat(result[0].last_seen_unix));
-    const unixNow = Math.floor(new Date().getTime() / 1000);
-    const intervalInMs = Math.floor(result[0].interval * 24 * 60 * 60);
-    const nextReview = lastSeenUnix + intervalInMs; //* todo.md backend #1
-
-    if (unixNow >= nextReview) {
-        console.log("review is ready");
-    }
-
-    //todo interval to ms add that ms to lastSeenUnix
-
-    if (!result) {
-        console.log("Card not found");
-        return
-    }
-    console.log(`unix for last_seen is ${lastSeenUnix}\ntime now is ${unixNow}\ninterval is ${intervalInMs}`)
-    console.log("next review is in ", nextReview)
+export async function readyForReview(user_id: string) { //? Call in se plant call
+    /*SQL query should be something like: SELECT  * from user_card_data WHERE user_id = $1 AND time.now is >= to next_review
+        where next_review is is interval(in seconds ) + unix time of last_seen
+    */
+    console.log("ready for review called")
+    const cardsReady = await db.cardsReady(user_id);
+    const unseenCards = await db.unseenCards(user_id);
+    cardsReady.forEach(card => console.log(`Ready card ${card.common_name}`))
+    console.log("****************************")
+    unseenCards.forEach(card => console.log(`Unseen card ${card.common_name}`))
 }

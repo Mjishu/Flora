@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import * as db from "../src/db/queries.js"
+import * as db from "../src/db/plantQueries.js"
 
 test('last_seen to unix', async () => { //! test will probably fail because cards get last_seen time constantly updated
     const expectedDate = new Date("2024-09-18 17:47:59.673313-04").getTime() / 1000;

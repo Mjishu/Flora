@@ -1,11 +1,12 @@
 import asyncHandler from "express-async-handler";
 import dotenv from 'dotenv';
 dotenv.config();
-import * as db from "../../src/db/queries.js";
+import * as db from "../db/plantQueries.js";
 import { Client } from "pg";
 import { Response, Request } from "express"
 import * as srs from "../srs.js";
 import { plant_data } from "../../src/types/card_types.js";
+import { readyForReview } from "../srs.js";
 
 ///*
 function sortData(data: { [key: string]: unknown }[]): { [key: string]: unknown }[] {
@@ -31,6 +32,8 @@ export const floridaTrees = asyncHandler(async (req, res, next) => {
 })
 
 export async function se_plants_na(req: Request, res: Response) {
+    if (!req.user) { return res.json({ message: "You are not logged in" }) }
+    readyForReview(req.user.id)
     const plants: plant_data[] = await db.getSETreesNA()
     res.send(plants)
 }

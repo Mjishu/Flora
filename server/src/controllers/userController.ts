@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 import dotenv from 'dotenv';
 import * as db from "../db/pool.js";
-import * as srs from "../db/queries.js"
+import * as srs from "../db/plantQueries.js"
 import bcrypt from "bcrypt";
 import * as utils from "../../auth/utils.js";
 import { Response, Request } from "express";
