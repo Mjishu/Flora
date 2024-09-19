@@ -57,7 +57,7 @@ export async function readyForReview(user_id, card_id) {
     const lastSeenUnix = Math.floor(parseFloat(result[0].last_seen_unix));
     const unixNow = Math.floor(new Date().getTime() / 1000);
     const intervalInMs = Math.floor(result[0].interval * 24 * 60 * 60);
-    const nextReview = lastSeenUnix + intervalInMs;
+    const nextReview = lastSeenUnix + intervalInMs; //* todo.md backend #1
     if (unixNow >= nextReview) {
         console.log("review is ready");
     }

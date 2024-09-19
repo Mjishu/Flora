@@ -20,8 +20,10 @@
 
 ## Frontend
 
-    - [ ]
+    - [ ] Make home page, should keep in  mind for more tabs. But have a button to click to go to the plants page 
 
 ## Backend
 
-    - [ ]
+    - [ ] Move the fetch statement from the homepage to the backend. The fetch can just happen in the use effect that calls the plants?
+    - [ ] Instead of doing all the checking logic in js, it will probably be lighter and faster to do it in sql, I can probably just do last_seen in unix and then convert
+        interval to seconds and then add those seconds to get the next review time.
