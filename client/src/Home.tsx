@@ -30,79 +30,51 @@ function Home() {
   })
 
   React.useEffect(() => {
-    fetch("/api/plants/northAmerica/southEast")
-      .then(res => res.json())
-      .then(data => setsePlantsNa(data))
-      .catch(err => console.error(`error fetching florida trees: ${err}`)) //network error?
+    fetch("/api/plants/na/south-east")
+      .then(res => res.json()).then(data => setsePlantsNa(data)).catch(err => console.error(`error fetching plants: ${err}`))
       .finally(() => setLoading(false))
   }, [])
 
-  // s:OJVhteYTR1nZqEAZ8UQm2MXcyzUnhfF8.QpQHKwdA6l1vsTaRw6mrBu7t5igR2Zw6wEnwKGMFGkI
-  //s:OJVhteYTR1nZqEAZ8UQm2MXcyzUnhfF8.QpQHKwdA6l1vsTaRw6mrBu7t5igR2Zw6wEnwKGMFGkI
   React.useEffect(() => {
-    if (!sePlantsNa) { return }
-
-    const token = localStorage.getItem("token")
-    if (token === null || !token) {
-      console.error("token does not exist");
-      return;
-    }
-
-    const fetchParams = {
-      method: "post",
-      headers: { Authorization: token, "Content-Type": "application/json" },
-      body: JSON.stringify({ card_id: sePlantsNa[plantNumber].id })
-    }
-
-    fetch("/api/cards/is-ready", fetchParams)
-      .then(res => res.json())
-      .then(data => console.log(data)) //? !data.isReady && plantNumber + 1 
-      .catch(err => console.error(`error fetching card status ${err}`))
-  }, [plantNumber, sePlantsNa]) //? not sure if i need these 2 dependencies
-
-  React.useEffect(() => {
-    function handleCardFlip(e: KeyboardEvent): void {
-      if (e.code === "Space" || e.key === " ") {
-        setcardFlipped(prevSpace => !prevSpace)
-      }
-    }
-    document.addEventListener("keydown", handleCardFlip);
-
-    return () => {
-      document.removeEventListener("keydown", handleCardFlip)
-    }
-  }, [])
-
-  React.useEffect(() => {
-    function handleArrow(e: KeyboardEvent): void {
-      if (e.code === "ArrowLeft") {
-        setArrows(prevArrows => ({
-          ...prevArrows, leftArrow: true
-        }))
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.code === "Space") {
+        flipCard();
       } else if (e.code === "ArrowRight") {
-        setArrows(prevArrows => ({
-          ...prevArrows, rightArrow: true
-        }))
+        handleKnownCard();
+      } else if (e.code === "ArrowLeft") {
+        handleUnknownCard();
       }
     }
-    document.addEventListener("keydown", handleArrow);
+
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener("keydown", handleArrow);
-    }
-  }, [])
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [cardFlipped, plantNumber])
 
-  React.useEffect(() => {
-    if (arrows.leftArrow) {
-      handleUnknownCard();
-      setArrows(prevArrows => ({ ...prevArrows, leftArrow: false }))
-    } else if (arrows.rightArrow) {
-      handleKnownCard();
-      setArrows(prevArrows => ({ ...prevArrows, rightArrow: false }))
-    }
-  }, [arrows])
+  // React.useEffect(() => {
+  //   if (!sePlantsNa) { return }
 
-  if (loading) {
+  //   const token = localStorage.getItem("token")
+  //   if (token === null || !token) {
+  //     console.error("token does not exist");
+  //     return;
+  //   }
+
+  //   const fetchParams = {
+  //     method: "post",
+  //     headers: { Authorization: token, "Content-Type": "application/json" },
+  //     body: JSON.stringify({ card_id: sePlantsNa[plantNumber].id })
+  //   }
+
+  //   fetch("/api/cards/is-ready", fetchParams)
+  //     .then(res => res.json())
+  //     .then(data => console.log(data)) //? !data.isReady && plantNumber + 1 
+  //     .catch(err => console.error(`error fetching card status ${err}`))
+  // }, [plantNumber, sePlantsNa]) //? not sure if i need these 2 dependencies
+
+  if (userLoading || loading) {
     return <h1>App is loading</h1>
   }
 
@@ -110,12 +82,14 @@ function Home() {
     return <h1>Cannot find data</h1>
   }
 
+
+
   function checkSignedIn() {
     setdisplayUser(currentUser?.username)
     console.log(`current user is ${JSON.stringify(currentUser)}`)
   }
 
-  function handleKnownCard(): void { //todo On fetch set authroization token here 
+  function handleKnownCard() { //todo On fetch set authroization token here 
     const token = localStorage.getItem("token");
 
     if (token === null) {
@@ -145,6 +119,7 @@ function Home() {
       setPlantNumber(0)
     }
     setcardFlipped(false);
+    setArrows(prevArrows => ({ ...prevArrows, rightArrow: false }));
   }
 
   function handleUnknownCard(): void {
@@ -176,6 +151,7 @@ function Home() {
       setPlantNumber(0)
     }
     setcardFlipped(false);
+    setArrows(prevArrows => ({ ...prevArrows, leftArrow: false }));
   }
 
   function flipCard(): void {
@@ -183,7 +159,7 @@ function Home() {
   }
 
   return (
-    <>
+    <div >
       <Navbar />
       <p>Welcome to flora</p>
       <button onClick={checkSignedIn}>Check logged in status</button>
@@ -216,7 +192,7 @@ function Home() {
         />
       }
 
-    </>
+    </div>
   )
 }
 

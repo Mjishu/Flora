@@ -11,6 +11,7 @@ import { UserProvider } from './components/user/userContext.js';
   element: <UserProvider>{route.element}</UserProvider>
 }))*/
 
+
 const router = createBrowserRouter(routes)
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

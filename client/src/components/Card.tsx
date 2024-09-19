@@ -10,7 +10,6 @@ type CardProps = {
     handleKnown: any;
     handleUnknown: any;
     cardFlipped: any;
-
 }
 
 type reverseCardProps = {
@@ -32,19 +31,19 @@ export function Card(props: CardProps) {
     return (
         <div>
             <h3>{props.common_name}</h3>
-            {props.image && <button className={style.imageButton} onClick={props.cardFlipped}>
+            {props.image && <button tabIndex={0} className={style.imageButton} onClick={props.cardFlipped}>
                 <img src={props.image} className={`${style.CardImage} shadow2`} />
                 {/* {props.is_invasive && <div className={style.invasiveHolder}>
                     <p className={style.isInvasive}>Invasive</p>
                 </div>} */}
             </button>}
             <div className={style.buttonHolder}>
-                <button className={`${style.answerButton} shadow1`} onClick={props.handleUnknown}>
+                <button tabIndex={0} className={`${style.answerButton} shadow1`} onClick={props.handleUnknown} >
                     <span className={style.answerButtonUnknown}>
                         <img className={style.buttonSvg} src="/icons/X.svg" alt="Unknown" />
                     </span>
                 </button>
-                <button className={`${style.answerButton} shadow1`} onClick={props.handleKnown}>
+                <button tabIndex={0} className={`${style.answerButton} shadow1`} onClick={props.handleKnown}>
                     <span className={style.answerButtonKnown}>
                         <img className={style.buttonSvg} src="/icons/Checkmark.svg" alt="Known" />
                     </span>

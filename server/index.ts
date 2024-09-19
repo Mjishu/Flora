@@ -7,7 +7,7 @@ import cookieParser from "cookie-parser"
 import logger from "morgan"
 
 import session from "express-session";
-import passport from "../auth/passport.js";
+import passport from "./auth/passport.js";
 
 
 import dotenv from "dotenv"
@@ -46,9 +46,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-import plantData from "./routes/plantData.js";
-import userData from "./routes/user.js";
-import cardData from "./routes/card.js";
+import plantData from "./src/routes/plantData.js";
+import userData from "./src/routes/user.js";
+import cardData from "./src/routes/card.js";
 import { fileURLToPath } from "url";
 
 app.use("/api/plants/", plantData);

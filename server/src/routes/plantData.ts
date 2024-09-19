@@ -3,7 +3,7 @@ const router = express.Router()
 
 import * as plantDataController from "../controllers/plantDataController.js";
 
-router.get("/northAmerica/southEast", plantDataController.se_plants_na)
+router.get("/na/south-east", plantDataController.se_plants_na)
 
 export default router
 
