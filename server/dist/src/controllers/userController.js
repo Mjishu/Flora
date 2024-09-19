@@ -1,8 +1,8 @@
 import asyncHandler from "express-async-handler";
 import dotenv from 'dotenv';
-import * as db from "../src/db/pool.js";
+import * as db from "../db/pool.js";
 import bcrypt from "bcrypt";
-import * as utils from "../auth/utils.js";
+import * as utils from "../../auth/utils.js";
 dotenv.config();
 export const getUser = asyncHandler(async (req, res) => {
     const result = await db.query('SELCECT * FROM users WHERE username = $1', [req.params.username]);
@@ -53,8 +53,6 @@ export const loginUser = asyncHandler(async (req, res, next) => {
     }
 });
 export const isProtected = asyncHandler(async (req, res, next) => {
-    console.log("isProtected called");
-    console.log("req body is ", req.body);
     res.status(200).json({ success: true, user: req.user });
 });
 export async function resetCards(req, res) {

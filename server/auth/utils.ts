@@ -27,7 +27,6 @@ export const authenticateJwt = (req: Request, res: Response, next: NextFunction)
             return next(err)
         }
         if (!user) {
-            console.log("user does not exist?")
             return res.status(401).json({ success: false, message: "unauthorized" })
         }
         req.user = user

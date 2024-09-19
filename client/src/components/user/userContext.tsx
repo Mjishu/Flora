@@ -39,7 +39,6 @@ export function UserProvider({ children }: UserProviderProps) {
         fetch("/api/users/protected", fetchParams)
             .then(res => res.json())
             .then(data => {
-                data.sucess && console.log(`user is logged in`)
                 data.success && setCurrentUser(data.user);//! Change this in the userController on backend
                 setUserLoading(false);
             })

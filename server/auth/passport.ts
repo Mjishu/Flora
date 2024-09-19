@@ -1,4 +1,4 @@
-import * as db from "../db/pool.js";
+import * as db from "../src/db/pool.js";
 import path from "path";
 import fs from "fs";
 

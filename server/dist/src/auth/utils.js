@@ -23,6 +23,7 @@ export const authenticateJwt = (req, res, next) => {
             return next(err);
         }
         if (!user) {
+            console.log("user does not exist?");
             return res.status(401).json({ success: false, message: "unauthorized" });
         }
         req.user = user;

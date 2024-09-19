@@ -7,7 +7,7 @@ import cookieParser from "cookie-parser"
 import logger from "morgan"
 
 import session from "express-session";
-import passport from "./auth/passport.js";
+import passport from "../auth/passport.js";
 
 
 import dotenv from "dotenv"

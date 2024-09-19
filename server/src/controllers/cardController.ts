@@ -23,3 +23,12 @@ export async function cardUnknown(req: Request, res: Response) {
     srs.srsFunc(req.user.id, req.body.card_id, req.body.seen)
     res.json({ message: "You did not know this card" })
 }
+
+export async function isCardReady(req: Request, res: Response) {
+    console.log("is card ready was called!")
+    if (!req.user) {
+        res.json({ message: "User is not logged in", success: false })
+        return
+    }
+    srs.readyForReview(req.user.id, req.body.card_id)
+}

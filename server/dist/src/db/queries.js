@@ -27,6 +27,7 @@ export async function updateCardRelationStreak(n, interval, user_id, card_id) {
     return;
 }
 export async function last_seenToUnix(card_id, user_id) {
-    const { rows } = await pool.query("SELECT * FROM user_card_data WHERE user_id = $1 AND card_id = $2;", [user_id, card_id]);
+    const { rows } = await pool.query("SELECT EXTRACT(EPOCH FROM last_seen) AS last_seen_unix,interval FROM user_card_data WHERE card_id = $1 AND user_id = $2", [card_id, user_id]);
+    //const { rows } = await pool.query("SELECT date_created FROM user_card_data WHERE user_id = $1 AND card_id = $2;", [user_id, card_id]);
     return rows;
 }

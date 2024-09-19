@@ -1,14 +1,15 @@
 import asyncHandler from "express-async-handler";
 import dotenv from 'dotenv';
 dotenv.config();
-import * as db from "../db/queries.js";
+import * as db from "../../src/db/queries.js";
 import { Client } from "pg";
 import { Response, Request } from "express"
 import * as srs from "../srs.js";
+import { plant_data } from "../../src/types/card_types.js";
 
 ///*
-function sortData(data: { [key: string]: any }[]): { [key: string]: any }[] {
-    return data.map((entry: { [key: string]: any }) => ({
+function sortData(data: { [key: string]: unknown }[]): { [key: string]: unknown }[] {
+    return data.map((entry: { [key: string]: unknown }) => ({
         common_name: entry.common_name,
         image_url: entry.image_url,
         scientific_name: entry.scientific_name,
@@ -30,17 +31,13 @@ export const floridaTrees = asyncHandler(async (req, res, next) => {
 })
 
 export async function se_plants_na(req: Request, res: Response) {
-    const plants = await db.getSETreesNA()
+    const plants: plant_data[] = await db.getSETreesNA()
     res.send(plants)
 }
 //*/
-export async function getFloridaTrees(req: Request, res: Response) {
-    const common_names = await db.getAllCommonNames();
-    console.log("common_names are ", common_names);
-    res.send("common names: " + common_names.map((name: any) => name.common_name).join(", "))
+export async function getFloridaTrees(req: Request, res: Response) { //* unused
+    const florida_plants = await db.getFLoridaPlants();
+    console.log("plants are ", florida_plants);
+    res.send("plants are: " + florida_plants.map((name: any) => name.common_name).join(", "))
 }
-
-export const Meower = asyncHandler(async (req, res) => {
-    res.json("Im such a meower")
-})
 

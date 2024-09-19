@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 import dotenv from 'dotenv';
 dotenv.config();
-import * as db from "../src/db/queries.js";
+import * as db from "../../src/db/queries.js";
 ///*
 function sortData(data) {
     return data.map((entry) => ({
@@ -26,7 +26,6 @@ export const floridaTrees = asyncHandler(async (req, res, next) => {
 });
 export async function se_plants_na(req, res) {
     const plants = await db.getSETreesNA();
-    console.log(plants);
     res.send(plants);
 }
 //*/

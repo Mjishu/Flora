@@ -1,4 +1,4 @@
-import * as db from "./src/db/queries.js";
+import * as db from "./db/queries.js";
 async function cardRelationshipExists(user_id, card_id, seen) {
     const card = (await db.getUserCardData(user_id, card_id))[0];
     if (!card) {
@@ -49,14 +49,23 @@ function isToday(date) {
 }
 export async function srsFunc(user_id, card_id, seen) {
     await cardRelationshipExists(user_id, card_id, seen);
-    await readyForReview(user_id, card_id);
+    //await readyForReview(user_id, card_id);
 }
-async function readyForReview(card_id, user_id) {
-    // const card = await pool.query("SELECT EXTRACT(EPOCH FROM last_seen) AS last_seen_unix FROM user_card_data WHERE card_id = $1 AND user_id = $2;", [card_id, user_id]);
-    const card = await db.last_seenToUnix(card_id, user_id);
-    if (!card) {
+export async function readyForReview(user_id, card_id) {
+    //? If i call it just on card change youd never see the card again
+    const result = await db.last_seenToUnix(card_id, user_id);
+    const lastSeenUnix = Math.floor(parseFloat(result[0].last_seen_unix));
+    const unixNow = Math.floor(new Date().getTime() / 1000);
+    const intervalInMs = Math.floor(result[0].interval * 24 * 60 * 60);
+    const nextReview = lastSeenUnix + intervalInMs;
+    if (unixNow >= nextReview) {
+        console.log("review is ready");
+    }
+    //todo interval to ms add that ms to lastSeenUnix
+    if (!result) {
         console.log("Card not found");
         return;
     }
-    console.log(card);
+    console.log(`unix for last_seen is ${lastSeenUnix}\ntime now is ${unixNow}\ninterval is ${intervalInMs}`);
+    console.log("next review is in ", nextReview);
 }

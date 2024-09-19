@@ -37,6 +37,29 @@ function Home() {
       .finally(() => setLoading(false))
   }, [])
 
+  // s:OJVhteYTR1nZqEAZ8UQm2MXcyzUnhfF8.QpQHKwdA6l1vsTaRw6mrBu7t5igR2Zw6wEnwKGMFGkI
+  //s:OJVhteYTR1nZqEAZ8UQm2MXcyzUnhfF8.QpQHKwdA6l1vsTaRw6mrBu7t5igR2Zw6wEnwKGMFGkI
+  React.useEffect(() => {
+    if (!sePlantsNa) { return }
+
+    const token = localStorage.getItem("token")
+    if (token === null || !token) {
+      console.error("token does not exist");
+      return;
+    }
+
+    const fetchParams = {
+      method: "post",
+      headers: { Authorization: token, "Content-Type": "application/json" },
+      body: JSON.stringify({ card_id: sePlantsNa[plantNumber].id })
+    }
+
+    fetch("/api/cards/is-ready", fetchParams)
+      .then(res => res.json())
+      .then(data => console.log(data)) //? !data.isReady && plantNumber + 1 
+      .catch(err => console.error(`error fetching card status ${err}`))
+  }, [plantNumber, sePlantsNa]) //? not sure if i need these 2 dependencies
+
   React.useEffect(() => {
     function handleCardFlip(e: KeyboardEvent): void {
       if (e.code === "Space" || e.key === " ") {
@@ -95,7 +118,7 @@ function Home() {
   function handleKnownCard(): void { //todo On fetch set authroization token here 
     const token = localStorage.getItem("token");
 
-    if (token == null) {
+    if (token === null) {
       console.error("token does not exist");
       return;
     }
