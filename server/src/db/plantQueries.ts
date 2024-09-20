@@ -54,7 +54,7 @@ export async function cardsReady(user_id: string) {
     return rows
 }
 
-export async function unseenCards(user_id: string) {
-    const { rows } = await pool.query("SELECT p.* FROM plants p LEFT JOIN user_card_data u ON p.id = u.card_id AND u.user_id = $1 WHERE u.card_id IS NULL;", [user_id])
+export async function unseenCards(user_id: string, limit: number) {
+    const { rows } = await pool.query("SELECT p.* FROM plants p LEFT JOIN user_card_data u ON p.id = u.card_id AND u.user_id = $1 WHERE u.card_id IS NULL LIMIT $2;", [user_id, limit])
     return rows;
 }

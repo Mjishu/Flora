@@ -22,9 +22,29 @@
 ## Frontend
 
     - [ ] Make home page, should keep in  mind for more tabs. But have a button to click to go to the plants page 
+    
+    - [ ] using left and right arrow doesnt work right now unless i click the button holding the card? if i click anywhere on the page it doesnt work
 
 ## Backend
 
-    - [ ] Move the fetch statement from the homepage to the backend. The fetch can just happen in the use effect that calls the plants?
-    - [ ] Instead of doing all the checking logic in js, it will probably be lighter and faster to do it in sql, I can probably just do last_seen in unix and then convert
+    - [x] Instead of doing all the checking logic in js, it will probably be lighter and faster to do it in sql, I can probably just do last_seen in unix and then convert
         interval to seconds and then add those seconds to get the next review time.
+
+    - [ ] Next_review time should be at  x time on the same day everyday, maybe go for a 2 am approach where Last last_seen + interval Math.floors into the previous 2AM?
+            Because every card thats next_review is on the 20th should be viewable at the same time on the 20th, one shouldnt be available at 9am and then next not untill 4pm.
+
+    - [ ] Move the fetch statement from the homepage to the backend. The fetch can just happen in the use effect that calls the plants?
+
+    - [ ] How to implement the efactor? for supermemo the function is l(n) :=l(n-1)*EF where EF is easeFactor i think and l(n) is inter-repition interval after nth rep
+
+    - [ ] calculate efactor based on streak? maybe make an entry that checks how many times a card was pressed unknown and known? and then check the relation between the 2 ?
+
+### efactor calculation (supermemo2)
+
+    1. 
+        l(1):=1
+        l(2):=6
+        for n > 2: l(n):=l(n-1)*EF
+    2. 
+        New E-factor formula: EF':= EF + (0.1-(5-q)*(0.08+(5-q)*0.02))
+        EF' = new ease factor | EF old ease factor | q quality of response(time taken, or more weight to some answers) | if EF < 1.3 ef = 1.3. 

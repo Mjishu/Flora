@@ -1,14 +1,11 @@
 import asyncHandler from "express-async-handler";
 import dotenv from 'dotenv';
 dotenv.config();
-import * as db from "../db/plantQueries.js";
-import { Client } from "pg";
 import { Response, Request } from "express"
+import * as db from "../db/plantQueries.js";
 import * as srs from "../srs.js";
 import { plant_data } from "../../src/types/card_types.js";
-import { readyForReview } from "../srs.js";
 
-///*
 function sortData(data: { [key: string]: unknown }[]): { [key: string]: unknown }[] {
     return data.map((entry: { [key: string]: unknown }) => ({
         common_name: entry.common_name,
@@ -33,14 +30,13 @@ export const floridaTrees = asyncHandler(async (req, res, next) => {
 
 export async function se_plants_na(req: Request, res: Response) {
     if (!req.user) { return res.json({ message: "You are not logged in" }) }
-    readyForReview(req.user.id)
-    const plants: plant_data[] = await db.getSETreesNA()
-    res.send(plants)
+    const cards: plant_data[] = await srs.readyForReview(req.user.id, 10) //* 10 here is the limit for the amount of new cards shown
+    // const plants: plant_data[] = await db.getSETreesNA()
+    res.send(cards)
 }
 //*/
 export async function getFloridaTrees(req: Request, res: Response) { //* unused
     const florida_plants = await db.getFLoridaPlants();
-    console.log("plants are ", florida_plants);
     res.send("plants are: " + florida_plants.map((name: any) => name.common_name).join(", "))
 }
 

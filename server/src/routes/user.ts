@@ -6,7 +6,7 @@ import * as userController from "../controllers/userController.js"
 import * as utils from "../../auth/utils.js"
 
 //! Getting 401 unauthorized, even with correct bearer token
-router.get("/protected", utils.authenticateJwt, userController.isProtected);
+router.get("/current", utils.authenticateJwt, userController.isProtected);
 
 router.get("/get/:id", userController.getUser);
 

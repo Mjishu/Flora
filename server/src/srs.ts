@@ -81,14 +81,9 @@ export async function srsFunc(user_id: string, card_id: string, seen: boolean) {
 }
 
 
-export async function readyForReview(user_id: string) { //? Call in se plant call
-    /*SQL query should be something like: SELECT  * from user_card_data WHERE user_id = $1 AND time.now is >= to next_review
-        where next_review is is interval(in seconds ) + unix time of last_seen
-    */
-    console.log("ready for review called")
+export async function readyForReview(user_id: string, limit: number) {//* could make this universal by making db.---(user_id) and the ---- is a paramater passed down?
     const cardsReady = await db.cardsReady(user_id);
-    const unseenCards = await db.unseenCards(user_id);
-    cardsReady.forEach(card => console.log(`Ready card ${card.common_name}`))
-    console.log("****************************")
-    unseenCards.forEach(card => console.log(`Unseen card ${card.common_name}`))
+    const unseenCards = await db.unseenCards(user_id, limit);
+    const cards = cardsReady.concat(unseenCards)
+    return cards
 }

@@ -28,7 +28,7 @@ body {
 .navbar-link,
 .navbar-link:active,
 .navbar-link:visited {
-    color: hsl(var(--off-white));
+    color: hsl(var(--background-black));
     text-decoration: none;
 }
 

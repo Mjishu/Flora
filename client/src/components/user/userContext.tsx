@@ -36,7 +36,7 @@ export function UserProvider({ children }: UserProviderProps) {
                 Authorization: token
             }
         }
-        fetch("/api/users/protected", fetchParams)
+        fetch("/api/users/current", fetchParams)
             .then(res => res.json())
             .then(data => {
                 data.success && setCurrentUser(data.user);//! Change this in the userController on backend
