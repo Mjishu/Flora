@@ -84,6 +84,7 @@ export async function srsFunc(user_id: string, card_id: string, seen: boolean) {
 export async function readyForReview(user_id: string, limit: number) {//* could make this universal by making db.---(user_id) and the ---- is a paramater passed down?
     const cardsReady = await db.cardsReady(user_id);
     const unseenCards = await db.unseenCards(user_id, limit);
+    console.log(cardsReady.length)
     const cards = cardsReady.concat(unseenCards)
     return cards
 }
