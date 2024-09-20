@@ -49,10 +49,13 @@ export async function last_seenToUnix(card_id: string, user_id: string) {//* isn
     return rows;
 }
 
-export async function cardsReady(user_id: string) {
+export async function cardsReady(user_id: string) { //*This should only happend if the streak is atleast 2 AND on the first day
     const { rows } = await pool.query(
-        `SELECT p.* FROM plants p JOIN user_card_data u ON p.id = u.card_id WHERE u.user_id = $1 AND
-            NOW() >= (date_trunc('day',u.last_seen + interval '1 second' * (u.interval * 864000)) + interval '2 hour')`
+        `SELECT p.* FROM plants p JOIN user_card_data u ON p.id = u.card_id 
+        WHERE u.user_id = $1 AND u.streak >= 2 AND NOW() =u.date_created AND
+            NOW() >= (
+                date_trunc('day',u.last_seen + interval '1 second' * (u.interval * 86400)) + interval '2 hour'
+                )`
         , [user_id])
     return rows
 }
