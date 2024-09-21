@@ -17,11 +17,15 @@
             plus id be doing it for option 1 as well. 
         To me #1 makes the most sense now as you can preview the previous ones while also going back? maybe Id have to make 2 arrays one thats up to date and one ready
             for any redo buttons? idk this is in the future implementation
-        I could use UseMemo for the 1st implementation on the front end so that it only changes when the array changes? idk if this would be redundant thoughf 
+        I could use UseMemo for the 1st implementation on the front end so that it only changes when the array changes? idk if this would be redundant thought
+
+## General
+
+    - [ ] Transfer to graphQL atleast try and see how it works?
 
 ## Frontend
 
-    - [ ] Make home page, should keep in  mind for more tabs. But have a button to click to go to the plants page 
+    - [X] Make home page, should keep in  mind for more tabs. But have a button to click to go to the plants page 
     
     - [ ] using left and right arrow doesnt work right now unless i click the button holding the card? if i click anywhere on the page it doesnt work
 
@@ -33,7 +37,7 @@
     - [ ] Next_review time should be at  x time on the same day everyday, maybe go for a 2 am approach where Last last_seen + interval Math.floors into the previous 2AM?
             Because every card thats next_review is on the 20th should be viewable at the same time on the 20th, one shouldnt be available at 9am and then next not untill 4pm.
 
-    - [ ] Move the fetch statement from the homepage to the backend. The fetch can just happen in the use effect that calls the plants?
+    - [X] Move the fetch statement from the homepage to the backend. The fetch can just happen in the use effect that calls the plants?
 
     - [ ] How to implement the efactor? for supermemo the function is l(n) :=l(n-1)*EF where EF is easeFactor i think and l(n) is inter-repition interval after nth rep
 

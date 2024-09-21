@@ -40,3 +40,6 @@ export async function getFloridaTrees(req: Request, res: Response) { //* unused
     res.send("plants are: " + florida_plants.map((name: any) => name.common_name).join(", "))
 }
 
+// export async function populateTimezones(req, res) {
+//     insertTimezones()
+// }

@@ -43,13 +43,15 @@ async function cardRelationshipExists(user_id: string, card_id: string, seen: bo
         if (isToday(card.date_created)) {
             if (card.streak + 1 >= 2) {
                 newInterval = 1.0
-            } else if (card.streak + 1 == 1) {
+            } else if (card.streak + 1 === 1) {
                 newInterval = 0.00695
             }
-        } else {
-            //todo do some magic bc card was not seen first time today.
+        } else { // for now this just adds a day on to the interval
+            //!do some magic bc card was not seen first time today. 
+            //* do some stuff with efactor here
+            newInterval = newInterval + 1.0 //? Change this to use the efactor, this should be where the equation goes i believe
         }
-        await db.updateCardRelationStreak(card.streak + 1, newInterval, card.user_id, card.card_id);
+        await db.updateCardRelationStreak(card.streak + 1, newInterval, card.user_id, card.card_id, seen);
     }
     else if (!seen) {
         let newInterval: number = card.interval;
@@ -61,7 +63,7 @@ async function cardRelationshipExists(user_id: string, card_id: string, seen: bo
             newInterval = 0.00695;
             newStreak = 0;
         }
-        await db.updateCardRelationStreak(newStreak, newInterval, card.user_id, card.card_id);
+        await db.updateCardRelationStreak(newStreak, newInterval, card.user_id, card.card_id, seen);
     }
 }
 
@@ -84,7 +86,6 @@ export async function srsFunc(user_id: string, card_id: string, seen: boolean) {
 export async function readyForReview(user_id: string, limit: number) {//* could make this universal by making db.---(user_id) and the ---- is a paramater passed down?
     const cardsReady = await db.cardsReady(user_id);
     const unseenCards = await db.unseenCards(user_id, limit);
-    console.log(cardsReady.length)
     const cards = cardsReady.concat(unseenCards)
     return cards
 }
