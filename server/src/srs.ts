@@ -24,6 +24,10 @@ interface get_card extends new_card {
     last_seen: Date;
 }
 
+function eFactorEquation(eFactor: number, Quality: number) {
+    return eFactor + (0.1 - (5 - Quality) * (0.08 + (5 - Quality) * 0.02))
+}
+
 async function cardRelationshipExists(user_id: string, card_id: string, seen: boolean): Promise<void> {
     const card: get_card = (await db.getUserCardData(user_id, card_id))[0]
 
@@ -39,31 +43,40 @@ async function cardRelationshipExists(user_id: string, card_id: string, seen: bo
         return
     }
     if (seen) {
-        let newInterval = card.interval
+        let newInterval = card.interval;
+        let newEfactor = card.efactor;
         if (isToday(card.date_created)) {
             if (card.streak + 1 >= 2) {
                 newInterval = 1.0
             } else if (card.streak + 1 === 1) {
                 newInterval = 0.00695
             }
-        } else { // for now this just adds a day on to the interval
-            //!do some magic bc card was not seen first time today. 
-            //* do some stuff with efactor here
-            newInterval = newInterval + 1.0 //? Change this to use the efactor, this should be where the equation goes i believe
+        } else { //! This should change to a deeper srs function but for now it should work?
+            newEfactor = eFactorEquation(card.efactor, 3)
+            if (newEfactor > 2.5) {
+                newEfactor = 2.5
+            } else if (newEfactor < 1.3) {
+                newEfactor = 1.3
+            }
+            newInterval = card.interval + 1
+            //* make function for newInterval here
         }
-        await db.updateCardRelationStreak(card.streak + 1, newInterval, card.user_id, card.card_id, seen);
+        await db.updateCardRelationStreak(card.streak + 1, newInterval, card.user_id, card.card_id, seen, newEfactor);
     }
     else if (!seen) {
         let newInterval: number = card.interval;
         let newStreak: number = card.streak;
+        let newEfactor = card.efactor
         if (isToday(card.date_created)) {
             newInterval = 0.000695;
             newStreak = 0;
         } else {
             newInterval = 0.00695;
             newStreak = 0;
+            newEfactor = eFactorEquation(card.efactor, 1)
+            if (newEfactor < 1.3) { newEfactor = 1.3 }
         }
-        await db.updateCardRelationStreak(newStreak, newInterval, card.user_id, card.card_id, seen);
+        await db.updateCardRelationStreak(newStreak, newInterval, card.user_id, card.card_id, seen, newEfactor);
     }
 }
 

@@ -26,16 +26,17 @@
 ## Frontend
 
     - [X] Make home page, should keep in  mind for more tabs. But have a button to click to go to the plants page 
+
+    - [ ] Fix types in Card.tsx OR make a types file and then use the types in each respective file.
     
     - [ ] using left and right arrow doesnt work right now unless i click the button holding the card? if i click anywhere on the page it doesnt work
 
 ## Backend
 
-    - [x] Instead of doing all the checking logic in js, it will probably be lighter and faster to do it in sql, I can probably just do last_seen in unix and then convert
-        interval to seconds and then add those seconds to get the next review time.
-
     - [ ] Next_review time should be at  x time on the same day everyday, maybe go for a 2 am approach where Last last_seen + interval Math.floors into the previous 2AM?
             Because every card thats next_review is on the 20th should be viewable at the same time on the 20th, one shouldnt be available at 9am and then next not untill 4pm.
+    ** I feel like I have this implemented, im getting true for a date being greater than the next interval time BUT the card isnt sending in the test? so
+        im not sure whats wrong. I prob just need to sleep on it
 
     - [X] Move the fetch statement from the homepage to the backend. The fetch can just happen in the use effect that calls the plants?
 

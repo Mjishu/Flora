@@ -38,10 +38,10 @@ export async function insertUserCardData(new_card: cardInterface) {
     return
 }
 
-export async function updateCardRelationStreak(n: number, interval: number, user_id: string, card_id: string, seen: boolean) {
-    await pool.query(`update user_card_data set streak = $1, interval = $2, 
+export async function updateCardRelationStreak(n: number, interval: number, user_id: string, card_id: string, seen: boolean, newEfactor: number) {
+    await pool.query(`update user_card_data set streak = $1, interval = $2, efactor = $6,
         all_time_known = all_time_known + CASE WHEN $3 = true THEN 1 ELSE 0 END, all_time_unknown = all_time_unknown + CASE WHEN $3 = false THEN 1 ELSE 0 END
-        where user_id = $4 and card_id = $5`, [n, interval, seen, user_id, card_id]);
+        where user_id = $4 and card_id = $5`, [n, interval, seen, user_id, card_id, newEfactor]);
     return
 }
 
@@ -52,20 +52,19 @@ export async function last_seenToUnix(card_id: string, user_id: string) {//* isn
     return rows;
 }
 
-export async function cardsReady(user_id: string) { //*This should only happend if the streak is atleast 2 AND on the first day
+export async function cardsReady(user_id: string) {
     const user = await userQueries.getUserTimezone(user_id);
-    const { rows } = await pool.query( //* This shows everycard on the date_created because it date_truncates and so the 1 and 10 minute interval doesnt work
+    const { rows } = await pool.query(
         `SELECT p.* FROM plants p JOIN user_card_data u ON p.id = u.card_id 
         WHERE u.user_id = $1  
             AND NOW() >= (u.last_seen + interval '1 second' * (u.interval * 86400))
             AND (
                 date_trunc('day', u.date_created) = date_trunc('day', NOW())
                 OR (
-                    date_trunc('day', NOW() AT TIME ZONE 'your_timezone') + interval '2 hour'
+                    date_trunc('day', NOW() AT TIME ZONE $2) + interval '2 hour'
                     <= NOW() AT TIME ZONE $2
     )
-  )`
-        , [user_id, user.zone]) //! the interval '2 hour' on line 64 might be why its not going to 2 am and is going to 4am
+  )`, [user_id, user.zone]) //! the interval '2 hour' on line 64 might be why its not going to 2 am and is going to 4am
     return rows
 }
 
