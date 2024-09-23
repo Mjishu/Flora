@@ -39,12 +39,8 @@
             Because every card thats next_review is on the 20th should be viewable at the same time on the 20th, one shouldnt be available at 9am and then next not untill 4pm.
     ** I feel like I have this implemented, im getting true for a date being greater than the next interval time BUT the card isnt sending in the test? so
         im not sure whats wrong. I prob just need to sleep on it
-
-    - [X] Move the fetch statement from the homepage to the backend. The fetch can just happen in the use effect that calls the plants?
-
-    - [ ] How to implement the efactor? for supermemo the function is l(n) :=l(n-1)*EF where EF is easeFactor i think and l(n) is inter-repition interval after nth rep
-
-    - [ ] calculate efactor based on streak? maybe make an entry that checks how many times a card was pressed unknown and known? and then check the relation between the 2 ?
+        
+    - [ ] changing timezone doesnt change when you see a card...
 
 ### efactor calculation (supermemo2)
 

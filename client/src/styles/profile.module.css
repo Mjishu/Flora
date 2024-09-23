@@ -1,14 +1,22 @@
 .timezoneHolder {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    background-color: hsl(var(--off-white), 0.5);
+    gap: .5rem;
+    background-color: rgb(157, 161, 139);
+    width: 12.5rem;
+    height: 20rem;
+    overflow-y: scroll;
+    border-radius: 5px;
+    align-items: center;
 }
 
 .zone {
     border: none;
-    width: 7.5rem;
+    width: 9rem;
     height: 2rem;
     border-radius: 5px;
     color: hsl(var(--background-black));
+    display: flex;
+    justify-content: end;
+    gap: 1rem;
 }

@@ -1,17 +1,27 @@
 import asyncHandler from "express-async-handler";
 import dotenv from 'dotenv';
 import * as db from "../db/pool.js";
-import * as srs from "../db/plantQueries.js"
+import * as userDb from "../db/userQueries.js"
 import bcrypt from "bcrypt";
 import * as utils from "../../auth/utils.js";
 import { Response, Request } from "express";
 
 dotenv.config();
 
-export const getUser = asyncHandler(async (req, res) => {
-    const result = await db.query('SELCECT * FROM users WHERE username = $1', [req.params.username])
-    res.send("User is getting ready!")
-})
+export async function getCurrentUser(req: Request, res: Response) {
+    if (!req.user) { return res.send({ message: "User not logged in", success: false }) }
+    const { rows } = await db.query("select users.username,users.email,users.id,timezones.zone from users join timezones on users.timezone_id = timezones.id where users.id = $1",
+        [req.user.id]
+    )
+    return res.json({ user: rows[0], success: true })
+}
+
+export async function getUser(req: Request, res: Response) {
+    const { rows } = await db.query("select users.username,users.email,timezones.zone from users join timezones on users.timezone_id = timezones.id where users.id = $1",
+        [req.params.id]
+    )
+    return res.json(rows[0])
+}
 
 export const createUser = asyncHandler(async (req, res) => {
     const user = await db.query("SELECT * FROM users WHERE username = $1", [req.body.username])
@@ -37,6 +47,13 @@ export const createUser = asyncHandler(async (req, res) => {
         res.json({ success: false, message: "fail" })
     }
 })
+
+export async function updateUser(req: Request, res: Response) {
+    if (!req.user) { return res.send({ message: "User not logged in", success: false }) }
+    await userDb.updateUserTimezone(req.user.id, req.body.id)
+
+    res.send({ message: `Timezone updated to ${req.body.zone}`, success: true })
+}
 
 export const loginUser = asyncHandler(async (req, res, next) => {
     try {
@@ -76,3 +93,9 @@ export async function resetCards(req: Request, res: Response) {
         res.status(500).json({ message: "Failed to reset cards", success: false })
     }
 }
+
+export async function getTimezones(req: Request, res: Response) {
+    const timezones = await userDb.getTimezones();
+    res.send(timezones)
+}
+

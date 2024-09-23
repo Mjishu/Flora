@@ -4,6 +4,7 @@ interface User {
     id: string;
     username: string;
     email: string;
+    zone: string
 }
 
 interface UserContextType {
@@ -39,6 +40,7 @@ export function UserProvider({ children }: UserProviderProps) {
         fetch("/api/users/current", fetchParams)
             .then(res => res.json())
             .then(data => {
+                console.log(data)
                 data.success && setCurrentUser(data.user);//! Change this in the userController on backend
                 setUserLoading(false);
             })
