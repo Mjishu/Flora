@@ -1,0 +1,14 @@
+.timezoneHolder {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    background-color: hsl(var(--off-white), 0.5);
+}
+
+.zone {
+    border: none;
+    width: 7.5rem;
+    height: 2rem;
+    border-radius: 5px;
+    color: hsl(var(--background-black));
+}
