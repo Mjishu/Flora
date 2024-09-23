@@ -1,9 +1,9 @@
 import React from 'react'
-import '../../App.css'
-import { Card, ReverseCard } from '../general/Card';
-import Navbar from '../general/Navbar';
-import authService from '../../auth/authService';
-import { UseUser } from "../user/userContext"
+import '../App.css'
+import { Card, ReverseCard } from '../components/general/Card';
+import Navbar from '../components/general/Navbar';
+import authService from '../auth/authService';
+import { UseUser } from "../components/user/userContext"
 
 const AuthService = new authService();
 interface Tree {

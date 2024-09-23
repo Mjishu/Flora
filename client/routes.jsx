@@ -1,8 +1,9 @@
 import Home from "./src/Home.tsx"
-import PlantHome from "./src/components/pages/PlantHome.tsx"
+import PlantHome from "./src/pages/PlantHome.tsx"
 import Error from "./src/components/general/Error.tsx"
 import Signup from "./src/components/user/Signup.tsx"
 import Login from "./src/components/user/Login.tsx"
+import Profile from "./src/pages/Profile.tsx"
 
 const routes = [
     {
@@ -21,6 +22,10 @@ const routes = [
     {
         path: "/login",
         element: <Login />
+    },
+    {
+        path: "/profile",
+        element: <Profile />
     }
 ]
 

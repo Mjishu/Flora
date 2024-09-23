@@ -27,6 +27,8 @@
 
     - [X] Make home page, should keep in  mind for more tabs. But have a button to click to go to the plants page 
 
+    - [ ] Profile page with editible features
+
     - [ ] Fix types in Card.tsx OR make a types file and then use the types in each respective file.
     
     - [ ] using left and right arrow doesnt work right now unless i click the button holding the card? if i click anywhere on the page it doesnt work
