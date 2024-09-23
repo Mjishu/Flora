@@ -3,19 +3,42 @@ import { UseUser } from '../components/user/userContext';
 import style from "../styles/profile.module.css";
 import Navbar from '../components/general/Navbar';
 
+interface timezoneInterface {
+    id: number,
+    zone: string,
+    utc_offset: string
+}
+
+interface userInfo {
+    username: string | undefined;
+    email: string | undefined;
+    timezone: timezoneInterface | undefined;
+}
+type Action =
+    | { type: 'username'; payload: string }
+    | { type: 'email'; payload: string }
+    | { type: 'timezone'; payload: timezoneInterface };
+
+function reducer(state: userInfo, action: Action) {
+    switch (action.type) {
+        case 'username':
+            return { ...state, username: action.payload }
+        case "email":
+            return { ...state, email: action.payload }
+        case "timezone":
+            return { ...state, timezone: action.payload }
+        default:
+            return state
+    }
+}
 
 function Profile() {
-    interface timezoneInterface {
-        id: number,
-        zone: string,
-        utc_offset: string
-    }
-
     const { currentUser, userLoading } = UseUser();
     const [loading, setLoading] = React.useState(true);
     const [showTimezone, setShowTimezone] = React.useState(false);
-    const [timezones, setTimezones] = React.useState<timezoneInterface[] | null>(null);
-    const [newTimezone, setNewTimezone] = React.useState<timezoneInterface | null>(null) //* change this maybe to include other user options? or curentUser.timezone?
+    const [showEdit, setShowEdit] = React.useState(false);
+    const [timezones, setTimezones] = React.useState<timezoneInterface[] | undefined>(undefined);
+    const [state, dispatch] = React.useReducer<React.Reducer<userInfo, Action>>(reducer, { username: undefined, email: undefined, timezone: undefined } as userInfo)
 
     React.useEffect(() => {
         fetch("/api/users/timezones")
@@ -42,14 +65,22 @@ function Profile() {
         const fetchParams = {
             method: "POST",
             headers: { "Content-Type": "application/json", Authorization: token },
-            body: JSON.stringify(newTimezone)
+            body: JSON.stringify(state)
         }
-        fetch(`/api/users/update/${currentUser?.id}`, fetchParams)
-            .then(res => res.json()).then(data => console.log(data)).catch(err => console.error(`error updating user: ${err}`))
+        console.log(fetchParams)
+        // state.timezone ? fetch(`/api/users/update/${currentUser?.id}`, fetchParams)
+        //     .then(res => res.json()).then(data => console.log(data)).catch(err => console.error(`error updating user: ${err}`)) : console.log("Timezone is not delcared")
+
+        setShowEdit(false)
+    }
+
+    function handleChange(e) {
+        const { name, value } = e.target;
+        dispatch({ type: name, payload: value })
     }
 
     function updateTimezone(timezone: timezoneInterface) {
-        setNewTimezone(timezone)
+        dispatch({ type: "timezone", payload: timezone })
     }
 
     const mappedTimezones = timezones && timezones.map((timezone: timezoneInterface) => {
@@ -65,13 +96,20 @@ function Profile() {
             <Navbar />
             <h1>Welcome {currentUser.username}</h1>
             <p>Your current Timezone is {currentUser.zone}</p>
-            <div>
-                <button className={style.userTimezones} onClick={() => setShowTimezone(prev => !prev)}>Timezone</button>
-                <div className={`${showTimezone && style.timezoneHolder}`}>
-                    {showTimezone && mappedTimezones}
+            <button onClick={() => setShowEdit(true)}>Edit</button>
+            {showEdit &&
+                <div className={style.editInfo}>
+                    <button className={style.userTimezones} onClick={() => setShowTimezone(prev => !prev)}>Timezone</button>
+                    <div className={`${showTimezone && style.timezoneHolder}`}>
+                        {showTimezone && mappedTimezones}
+                    </div>
+                    <label htmlFor="username">Username</label>
+                    <input type="text" value={state.username} name="username" onChange={handleChange} />
+                    <label htmlFor="email">Email</label>
+                    <input type="text" value={state.email} name="email" onChange={handleChange} />
+                    <button className={style.saveButton} onClick={updateUser}>Save</button>
                 </div>
-            </div>
-            <button className={style.saveButton} onClick={updateUser}>Save</button>
+            }
         </div>
     )
 }

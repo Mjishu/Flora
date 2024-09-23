@@ -20,3 +20,12 @@
     justify-content: end;
     gap: 1rem;
 }
+
+.editInfo{
+    display: flex;
+    flex-direction: column;
+}
+
+.editInfo input, .editInfo label,.editInfo button {
+    width: 9rem;
+}

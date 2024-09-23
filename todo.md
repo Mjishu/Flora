@@ -39,8 +39,8 @@
             Because every card thats next_review is on the 20th should be viewable at the same time on the 20th, one shouldnt be available at 9am and then next not untill 4pm.
     ** I feel like I have this implemented, im getting true for a date being greater than the next interval time BUT the card isnt sending in the test? so
         im not sure whats wrong. I prob just need to sleep on it
-        
-    - [ ] changing timezone doesnt change when you see a card...
+
+    - [ ] changing timezone doesnt change when you see a card, i.e seeing a new card and going from london -> tokyo doesnt update when you see x card
 
 ### efactor calculation (supermemo2)
 
