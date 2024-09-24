@@ -12,12 +12,12 @@ interface timezoneInterface {
 interface userInfo {
     username: string | undefined;
     email: string | undefined;
-    timezone: timezoneInterface | undefined;
+    timezone: string | undefined;
 }
 type Action =
     | { type: 'username'; payload: string }
     | { type: 'email'; payload: string }
-    | { type: 'timezone'; payload: timezoneInterface };
+    | { type: 'timezone'; payload: string };
 
 function reducer(state: userInfo, action: Action) {
     switch (action.type) {
@@ -38,7 +38,9 @@ function Profile() {
     const [showTimezone, setShowTimezone] = React.useState(false);
     const [showEdit, setShowEdit] = React.useState(false);
     const [timezones, setTimezones] = React.useState<timezoneInterface[] | undefined>(undefined);
-    const [state, dispatch] = React.useReducer<React.Reducer<userInfo, Action>>(reducer, { username: undefined, email: undefined, timezone: undefined } as userInfo)
+    const [state, dispatch] = React.useReducer<React.Reducer<userInfo, Action>>(reducer, {
+        username: currentUser?.username || "", email: currentUser?.email || "", timezone: currentUser?.zone || undefined
+    } as userInfo)
 
     React.useEffect(() => {
         fetch("/api/users/timezones")
@@ -49,6 +51,15 @@ function Profile() {
             })
             .catch(err => console.error(`There was an error trying to fetch timezones: ${err}`))
     }, [])
+
+    React.useEffect(() => {
+        if (currentUser) {
+            dispatch({ type: 'username', payload: currentUser.username || '' });
+            dispatch({ type: 'email', payload: currentUser.email || '' });
+            dispatch({ type: 'timezone', payload: currentUser.zone });
+        }
+        console.log(`current users zone : ${currentUser?.zone}`)
+    }, [currentUser])
 
     if (userLoading || loading) {
         return <h1>Loading...</h1>
@@ -67,9 +78,8 @@ function Profile() {
             headers: { "Content-Type": "application/json", Authorization: token },
             body: JSON.stringify(state)
         }
-        console.log(fetchParams)
-        // state.timezone ? fetch(`/api/users/update/${currentUser?.id}`, fetchParams)
-        //     .then(res => res.json()).then(data => console.log(data)).catch(err => console.error(`error updating user: ${err}`)) : console.log("Timezone is not delcared")
+        state.timezone ? fetch(`/api/users/update/${currentUser?.id}`, fetchParams)
+            .then(res => res.json()).then(data => console.log(data)).catch(err => console.error(`error updating user: ${err}`)) : console.log("Timezone is not delcared")
 
         setShowEdit(false)
     }
@@ -80,7 +90,7 @@ function Profile() {
     }
 
     function updateTimezone(timezone: timezoneInterface) {
-        dispatch({ type: "timezone", payload: timezone })
+        dispatch({ type: "timezone", payload: timezone.zone })
     }
 
     const mappedTimezones = timezones && timezones.map((timezone: timezoneInterface) => {

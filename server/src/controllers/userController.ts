@@ -50,9 +50,10 @@ export const createUser = asyncHandler(async (req, res) => {
 
 export async function updateUser(req: Request, res: Response) {
     if (!req.user) { return res.send({ message: "User not logged in", success: false }) }
-    await userDb.updateUserTimezone(req.user.id, req.body.id)
-
-    res.send({ message: `Timezone updated to ${req.body.zone}`, success: true })
+    const { username, email, timezone } = req.body
+    if (username === null || email === null || timezone === null) { return res.status(400).json({ message: "Invalid user info", success: true }) }
+    await userDb.updateUser(req.user.id, username, email, timezone)
+    res.send({ message: `Timezone updated to ${timezone}`, success: true })
 }
 
 export const loginUser = asyncHandler(async (req, res, next) => {
