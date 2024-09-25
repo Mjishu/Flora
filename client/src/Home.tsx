@@ -1,9 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './App.css';
+import style from "./styles/homePage.module.css"
 import { UseUser } from "./components/user/userContext";
 import authService from './auth/authService';
 import Navbar from './components/general/Navbar';
-import { useNavigate } from 'react-router-dom';
 
 const AuthService = new authService();
 
@@ -27,7 +28,11 @@ function Home() {
             <button onClick={() => AuthService.logout()}>Logout</button>
             {displayUser.show && <h2>Your username is {displayUser.username}</h2>}
 
-            <button onClick={() => navigate("/plants")}>Learn about Plants</button>
+            <div className={style.kingdomHolder}>
+                <button className={`${style.kingdomButton} fs-24`} onClick={() => navigate("/plants")}>Flora</button>
+                <button className={`${style.kingdomButton} fs-24`}>Fauna</button>
+                <button className={`${style.kingdomButton} fs-24`}>Fungi</button>`
+            </div>
         </div>
     )
 }

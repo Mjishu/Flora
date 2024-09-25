@@ -2,10 +2,8 @@ import React from 'react'
 import '../App.css'
 import { Card, ReverseCard } from '../components/general/Card';
 import Navbar from '../components/general/Navbar';
-import authService from '../auth/authService';
 import { UseUser } from "../components/user/userContext"
 
-const AuthService = new authService();
 interface Tree {
   id: number;
   image_url: string;
@@ -18,73 +16,31 @@ interface Tree {
 }
 
 export default function PlantHome() {
-  const { currentUser, currentUserRef, userLoading } = UseUser();
+  const { currentUser, userLoading } = UseUser();
   const [sePlantsNa, setsePlantsNa] = React.useState<Tree[] | null>(null);
   const [plantNumber, setPlantNumber] = React.useState(0)
   const [loading, setLoading] = React.useState(true);
   const [cardFlipped, setcardFlipped] = React.useState(false);
-  const [arrows, setArrows] = React.useState({
-    rightArrow: false,
-    leftArrow: false,
-  })
 
   React.useEffect(() => {
     const token = localStorage.getItem("token")
     if (!token) { return console.log("You are not logged in") }
 
-    fetch("/api/plants/na/south-east", { method: "GET", headers: { Authorization: token } }) //* adding the auth part made it break?
-      .then(res => res.json()).then(data => setsePlantsNa(data)).catch(err => console.error(`error fetching plants: ${err}`))
-      .finally(() => setLoading(false))
-  }, [])
+    fetch("/api/plants/na/south-east", { method: "GET", headers: { Authorization: token } }) //*I need this to get recalled I think on every card flip, but right now its i + 1
+      //* since i added cardFlipped as dependency, I think that this executes before it makes the api call for the known or unknown call
+      .then(res => res.json()).then(data => {
+        setsePlantsNa(data)
+        setLoading(false)
+      }).catch(err => console.error(`error fetching plants: ${err}`))
+  }, [plantNumber])
 
-  React.useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.code === "Space") {
-        flipCard();
-      } else if (e.code === "ArrowRight") {
-        handleKnownCard();
-      } else if (e.code === "ArrowLeft") {
-        handleUnknownCard();
-      }
-    }
+  React.useEffect(() => { console.log(sePlantsNa) }, [sePlantsNa])
 
-    window.addEventListener("keydown", handleKeyDown);
+  const flipCard = React.useCallback(() => {
+    setcardFlipped(!cardFlipped)
+  }, [cardFlipped])
 
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [cardFlipped, plantNumber])
-
-  // React.useEffect(() => {
-  //   if (!sePlantsNa) { return }
-
-  //   const token = localStorage.getItem("token")
-  //   if (token === null || !token) {
-  //     console.error("token does not exist");
-  //     return;
-  //   }
-
-  //   const fetchParams = {
-  //     method: "post",
-  //     headers: { Authorization: token, "Content-Type": "application/json" },
-  //     body: JSON.stringify({ card_id: sePlantsNa[plantNumber].id })
-  //   }
-
-  //   fetch("/api/cards/is-ready", fetchParams)
-  //     .then(res => res.json())
-  //     .then(data => console.log(data)) //? !data.isReady && plantNumber + 1 
-  //     .catch(err => console.error(`error fetching card status ${err}`))
-  // }, [plantNumber, sePlantsNa]) //? not sure if i need these 2 dependencies
-
-  if (userLoading || loading) {
-    return <h1>App is loading</h1>
-  }
-
-  if (!sePlantsNa || sePlantsNa.length < 1) {
-    return <h1>Cannot find data</h1>
-  }
-
-  function handleKnownCard() { //todo On fetch set authroization token here 
+  const handleKnownCard = React.useCallback(async () => {
     const token = localStorage.getItem("token");
 
     if (token === null) {
@@ -92,7 +48,7 @@ export default function PlantHome() {
       return;
     }
 
-    if (!sePlantsNa) { return }
+    if (!sePlantsNa) { return console.error("issue with plants", sePlantsNa) }
 
     const fetchParams = {
       method: "post",
@@ -104,7 +60,7 @@ export default function PlantHome() {
       body: JSON.stringify({ card_id: sePlantsNa[plantNumber].id, seen: true })
     }
 
-    fetch("/api/cards/known", fetchParams)
+    await fetch("/api/cards/known", fetchParams)
       .then(res => res.json())
       .then(data => console.log(data))
       .catch(err => console.error(`error sending card back: ${err}`))
@@ -114,18 +70,18 @@ export default function PlantHome() {
       setPlantNumber(0)
     }
     setcardFlipped(false);
-    setArrows(prevArrows => ({ ...prevArrows, rightArrow: false }));
-  }
+  }, [sePlantsNa])
 
-  function handleUnknownCard(): void {
+  const handleUnknownCard = React.useCallback(async () => {
     const token = localStorage.getItem("token");
+    console.log("unknown called")
 
     if (token == null) {
       console.error("Token does not exist");
       return;
     }
 
-    if (!sePlantsNa) { return }
+    if (!sePlantsNa) { return console.error("issue with plants", sePlantsNa) }
 
     const fetchParams = {
       method: "post",
@@ -136,7 +92,7 @@ export default function PlantHome() {
       },
       body: JSON.stringify({ card_id: sePlantsNa[plantNumber].id, seen: false })
     }
-    fetch("/api/cards/unknown", fetchParams)
+    await fetch("/api/cards/unknown", fetchParams)
       .then(res => res.json())
       .then(data => console.log(data))
       .catch(err => console.error(`error sending card back: ${err}`))
@@ -146,44 +102,69 @@ export default function PlantHome() {
       setPlantNumber(0)
     }
     setcardFlipped(false);
-    setArrows(prevArrows => ({ ...prevArrows, leftArrow: false }));
+  }, [sePlantsNa])
+
+  React.useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.code === "Space") {
+        flipCard();
+      } else if (e.code === "ArrowRight") {
+        handleKnownCard()
+      } else if (e.code === "ArrowLeft") {
+        handleUnknownCard()
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [cardFlipped, plantNumber, handleKnownCard, handleUnknownCard, flipCard])
+
+  if (userLoading || loading) {
+    return <h1>App is loading</h1>
   }
 
-  function flipCard(): void {
-    setcardFlipped(!cardFlipped)
+  if (!sePlantsNa) {
+    return <h1>Cannot find data</h1>
   }
 
   return (
     <div >
       <Navbar />
       <h1>Plants</h1>
-      {!cardFlipped ? <Card
-        plantNumber={plantNumber}
-        setPlantNumber={setPlantNumber}
-        common_name={sePlantsNa[plantNumber].common_name}
-        image={sePlantsNa[plantNumber].image_url}
-        plantsLength={sePlantsNa.length}
-        handleKnown={handleKnownCard}
-        handleUnknown={handleUnknownCard}
-        cardFlipped={flipCard}
-      />
-        :
-        <ReverseCard
-          plantNumber={plantNumber}
-          setPlantNumber={setPlantNumber}
-          common_name={sePlantsNa[plantNumber].common_name}
-          scientific_name={sePlantsNa[plantNumber].scientific_name}
-          genus={sePlantsNa[plantNumber].genus}
-          family={sePlantsNa[plantNumber].family}
-          plantsLength={sePlantsNa.length}
-          handleKnown={handleKnownCard}
-          handleUnknown={handleUnknownCard}
-          cardFlipped={flipCard}
-          description={sePlantsNa[plantNumber].description}
-          is_invasive={sePlantsNa[plantNumber].is_invasive}
-        />
+      {
+        sePlantsNa.length < 1 ? (
+          <h3>You have no more cards!</h3>
+        ) : !cardFlipped ? (
+          <Card
+            plantNumber={plantNumber}
+            setPlantNumber={setPlantNumber}
+            common_name={sePlantsNa[plantNumber].common_name}
+            image={sePlantsNa[plantNumber].image_url}
+            plantsLength={sePlantsNa.length}
+            handleKnown={handleKnownCard}
+            handleUnknown={handleUnknownCard}
+            cardFlipped={flipCard}
+          />
+        ) : (
+          <ReverseCard
+            plantNumber={plantNumber}
+            setPlantNumber={setPlantNumber}
+            common_name={sePlantsNa[plantNumber].common_name}
+            scientific_name={sePlantsNa[plantNumber].scientific_name}
+            genus={sePlantsNa[plantNumber].genus}
+            family={sePlantsNa[plantNumber].family}
+            plantsLength={sePlantsNa.length}
+            handleKnown={handleKnownCard}
+            handleUnknown={handleUnknownCard}
+            cardFlipped={flipCard}
+            description={sePlantsNa[plantNumber].description}
+            is_invasive={sePlantsNa[plantNumber].is_invasive}
+          />
+        )
       }
-
     </div>
   )
 }

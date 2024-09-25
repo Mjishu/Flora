@@ -19,15 +19,15 @@
             for any redo buttons? idk this is in the future implementation
         I could use UseMemo for the 1st implementation on the front end so that it only changes when the array changes? idk if this would be redundant thought
 
-## General
+## General IMPORTANT ONES HERE
 
-    - [ ] Transfer to graphQL atleast try and see how it works?
+- [ ] If I get through all my cards it bugs out, starts showing current cards again but they shouldnt be able to be seen | I have to reload for it to work so I need a dependency or something for it to check on so that it checks without needing window reload
 
 ## Frontend
 
     - [X] Make home page, should keep in  mind for more tabs. But have a button to click to go to the plants page 
 
-    - [ ] Profile page with editible features
+    - [x] Profile page with editible features
 
     - [ ] Fix types in Card.tsx OR make a types file and then use the types in each respective file.
     

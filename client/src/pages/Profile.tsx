@@ -14,10 +14,11 @@ interface userInfo {
     email: string | undefined;
     timezone: string | undefined;
 }
-type Action =
-    | { type: 'username'; payload: string }
-    | { type: 'email'; payload: string }
-    | { type: 'timezone'; payload: string };
+type ActionType = "username" | 'email' | "timezone";
+interface Action {
+    type: ActionType;
+    payload: string;
+}
 
 function reducer(state: userInfo, action: Action) {
     switch (action.type) {
@@ -84,9 +85,9 @@ function Profile() {
         setShowEdit(false)
     }
 
-    function handleChange(e) {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;
-        dispatch({ type: name, payload: value })
+        dispatch({ type: name as ActionType, payload: value })
     }
 
     function updateTimezone(timezone: timezoneInterface) {

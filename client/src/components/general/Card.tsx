@@ -58,7 +58,7 @@ export function ReverseCard(props: reverseCardProps) {
 
     return (
         <div>
-            <button className={style.imageButton} onClick={props.cardFlipped}>
+            <button className={style.imageButton} onClick={props.cardFlipped} tabIndex={0}>
                 <div className={`${style.reverseCard}`}>
                     <div>
                         <h4>Common Name</h4>

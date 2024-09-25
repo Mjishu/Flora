@@ -22,7 +22,7 @@ function Login() {
         password: "",
     })
 
-    function signIn(e: any) {
+    function signIn(e: React.SyntheticEvent) {
         e.preventDefault()
         const fetchParams = {
             method: "POST",
@@ -45,9 +45,9 @@ function Login() {
 
     }
 
-    function handleChange(e) {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;
-        dispatch({ type: name, payload: value })
+        dispatch({ type: name as "username" | "password", payload: value })
     }
 
     return (

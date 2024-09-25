@@ -53,3 +53,14 @@ body {
     4px 8px 10px rgba(0, 6, 6, 0.09),
     5px 10px 12px rgba(0, 2, 3, 0.1);
 }
+
+/*--  */
+/* Font Sizes */
+/* - */
+
+.fs-32{
+    font-size: 32px;
+}
+.fs-24{
+    font-size: 24px;
+}
