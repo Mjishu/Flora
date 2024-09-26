@@ -49,11 +49,13 @@ app.use(passport.session());
 import plantData from "./src/routes/plantData.js";
 import userData from "./src/routes/user.js";
 import cardData from "./src/routes/card.js";
+import quizData from "./src/routes/quiz.js"
 import { fileURLToPath } from "url";
 
 app.use("/api/plants/", plantData);
 app.use("/api/users/", userData);
 app.use("/api/cards/", cardData)
+app.use("/api/quiz/", quizData)
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`)

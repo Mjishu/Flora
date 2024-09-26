@@ -11,4 +11,5 @@ router.post("/unknown", utils.authenticateJwt, cardController.cardUnknown);
 
 router.post("/is-ready", utils.authenticateJwt, cardController.isCardReady);
 
+
 export default router;

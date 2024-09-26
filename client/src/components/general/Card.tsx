@@ -38,12 +38,12 @@ export function Card(props: CardProps) {
                 </div>} */}
             </button>}
             <div className={style.buttonHolder}>
-                <button tabIndex={0} className={`${style.answerButton} shadow1`} onClick={props.handleUnknown} >
+                <button tabIndex={0} className={`${style.answerButton} shadow1`} onClick={async () => await props.handleUnknown} >
                     <span className={style.answerButtonUnknown}>
                         <img className={style.buttonSvg} src="/icons/X.svg" alt="Unknown" />
                     </span>
                 </button>
-                <button tabIndex={0} className={`${style.answerButton} shadow1`} onClick={props.handleKnown}>
+                <button tabIndex={0} className={`${style.answerButton} shadow1`} onClick={async () => await props.handleKnown}>
                     <span className={style.answerButtonKnown}>
                         <img className={style.buttonSvg} src="/icons/Checkmark.svg" alt="Known" />
                     </span>
@@ -85,12 +85,12 @@ export function ReverseCard(props: reverseCardProps) {
                 </div>
             </button>
             <div className={style.buttonHolder}>
-                <button className={`${style.answerButton} shadow1`} onClick={props.handleUnknown}>
+                <button className={`${style.answerButton} shadow1`} onClick={async () => await props.handleUnknown}>
                     <span className={style.answerButtonUnknown}>
                         <img className={style.buttonSvg} src="/icons/X.svg" alt="Unknown" />
                     </span>
                 </button>
-                <button className={`${style.answerButton} shadow1`} onClick={props.handleKnown}>
+                <button className={`${style.answerButton} shadow1`} onClick={async () => await props.handleKnown}>
                     <span className={style.answerButtonKnown}>
                         <img className={style.buttonSvg} src="/icons/Checkmark.svg" alt="Known" />
                     </span>

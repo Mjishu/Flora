@@ -3,6 +3,7 @@ import '../App.css'
 import { Card, ReverseCard } from '../components/general/Card';
 import Navbar from '../components/general/Navbar';
 import { UseUser } from "../components/user/userContext"
+import { Link } from 'react-router-dom';
 
 interface Tree {
   id: number;
@@ -22,17 +23,10 @@ export default function PlantHome() {
   const [loading, setLoading] = React.useState(true);
   const [cardFlipped, setcardFlipped] = React.useState(false);
 
-  React.useEffect(() => {
-    const token = localStorage.getItem("token")
-    if (!token) { return console.log("You are not logged in") }
 
-    fetch("/api/plants/na/south-east", { method: "GET", headers: { Authorization: token } }) //*I need this to get recalled I think on every card flip, but right now its i + 1
-      //* since i added cardFlipped as dependency, I think that this executes before it makes the api call for the known or unknown call
-      .then(res => res.json()).then(data => {
-        setsePlantsNa(data)
-        setLoading(false)
-      }).catch(err => console.error(`error fetching plants: ${err}`))
-  }, [plantNumber])
+  React.useEffect(() => {
+    getReadyCards()
+  }, [])
 
   React.useEffect(() => { console.log(sePlantsNa) }, [sePlantsNa])
 
@@ -70,6 +64,7 @@ export default function PlantHome() {
       setPlantNumber(0)
     }
     setcardFlipped(false);
+    await getReadyCards()
   }, [sePlantsNa])
 
   const handleUnknownCard = React.useCallback(async () => {
@@ -102,6 +97,7 @@ export default function PlantHome() {
       setPlantNumber(0)
     }
     setcardFlipped(false);
+    await getReadyCards();
   }, [sePlantsNa])
 
   React.useEffect(() => {
@@ -122,6 +118,18 @@ export default function PlantHome() {
     };
   }, [cardFlipped, plantNumber, handleKnownCard, handleUnknownCard, flipCard])
 
+  async function getReadyCards() {
+    const token = localStorage.getItem("token")
+    if (!token) { return console.log("You are not logged in") }
+
+    await fetch("/api/plants/na/south-east", { method: "GET", headers: { Authorization: token } }) //*I need this to get recalled I think on every card flip, but right now its i + 1
+      //* since i added cardFlipped as dependency, I think that this executes before it makes the api call for the known or unknown call
+      .then(res => res.json()).then(data => {
+        setsePlantsNa(data)
+        setLoading(false)
+      }).catch(err => console.error(`error fetching plants: ${err}`))
+  }
+
   if (userLoading || loading) {
     return <h1>App is loading</h1>
   }
@@ -135,7 +143,7 @@ export default function PlantHome() {
       <Navbar />
       <h1>Plants</h1>
       {
-        sePlantsNa.length < 1 ? (
+        sePlantsNa.length <= 1 ? ( //* this currently solves the issue for no more cards, but this isn't very fool proof. It should just be < 1 and not needing <=
           <h3>You have no more cards!</h3>
         ) : !cardFlipped ? (
           <Card
@@ -165,6 +173,7 @@ export default function PlantHome() {
           />
         )
       }
+      <Link to="/quiz">Plant Quiz</Link>
     </div>
   )
 }

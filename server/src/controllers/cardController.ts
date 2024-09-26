@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import dotenv from 'dotenv';
 dotenv.config();
 import * as db from "../db/plantQueries.js";
+import * as pool from "../db/pool.js"
 import { Client } from "pg";
 import { Response, Request } from "express"
 import * as srs from "../srs.js";
@@ -32,3 +33,4 @@ export async function isCardReady(req: Request, res: Response) {
     }
     // srs.readyForReview(req.user.id, req.body.card_id)
 }
+
