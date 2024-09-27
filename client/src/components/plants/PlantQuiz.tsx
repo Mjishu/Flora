@@ -29,7 +29,7 @@ interface User {
     zone: string
 }
 
-function useData(url: string, quiz_id: string, currentUser: User) {
+function useData(url: string, currentUser: User) {
     const [data, setData] = React.useState<answers[] | undefined>(undefined)
     const [quiz, setQuiz] = React.useState<quiz | undefined>(undefined)
     const [loading, setLoading] = React.useState(true)
@@ -40,7 +40,7 @@ function useData(url: string, quiz_id: string, currentUser: User) {
         if (!token) { return console.error("Could not fetch token") }
 
         const params = {
-            method: "POST", headers: { Authorization: token, "Content-Type": "application/json" }, body: JSON.stringify({ user_id: currentUser?.id, quiz_id: quiz_id })
+            method: "POST", headers: { Authorization: token, "Content-Type": "application/json" }, body: JSON.stringify({ user_id: currentUser?.id, })
         }
 
         fetch(url, params)
@@ -57,7 +57,7 @@ function useData(url: string, quiz_id: string, currentUser: User) {
 
 function PlantQuiz() {
     const { currentUser, userLoading } = UseUser(); //* why is quiz unknow here
-    const { data: quizAnswers, quiz, loading } = useData("/api/quiz/details", "ee404454-b115-4c5e-b907-1899f6207f41", currentUser)
+    const { data: quizAnswers, quiz, loading } = useData("/api/quiz/details", currentUser)
     const [selected, setSelected] = React.useState<string[]>([]);
 
 
@@ -104,7 +104,7 @@ function PlantQuiz() {
 
         if (arrEquals) {
             console.log("You got it correct")
-            fetch(`/api/quiz/details/${quiz.quiz_id}/update`, { headers: { Authorization: token } })
+            fetch(`/api/quiz/details/${quiz.id}`, { headers: { Authorization: token } })
                 .then(res => res.json())
                 .then(data => console.log(data))
                 .catch(err => console.error(`there was an error updating quiz data: ${err}`))

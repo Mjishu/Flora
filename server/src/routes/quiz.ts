@@ -9,7 +9,7 @@ router.post("/details/create", utils.authenticateJwt, quizController.create_quiz
 
 router.post("/details", utils.authenticateJwt, quizController.get_quiz_details)
 
-router.get("/details/:id/update", utils.authenticateJwt, quizController.update_quiz_details)
+router.get("/details/:id", utils.authenticateJwt, quizController.insert_quiz_details)
 
 
 export default router;

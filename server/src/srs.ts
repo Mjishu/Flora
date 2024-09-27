@@ -24,6 +24,12 @@ interface get_card extends new_card {
     last_seen: Date;
 }
 
+export async function srsFunc(user_id: string, card_id: string, seen: boolean) {
+    await cardRelationshipExists(user_id, card_id, seen);
+    //await readyForReview(user_id, card_id);
+}
+
+
 function eFactorEquation(eFactor: number, Quality: number) {
     return eFactor + (0.1 - (5 - Quality) * (0.08 + (5 - Quality) * 0.02))
 }
@@ -59,7 +65,6 @@ async function cardRelationshipExists(user_id: string, card_id: string, seen: bo
                 newEfactor = 1.3
             }
             newInterval = card.interval + 1
-            //* make function for newInterval here
         }
         await db.updateCardRelationStreak(card.streak + 1, newInterval, card.user_id, card.card_id, seen, newEfactor);
     }
@@ -90,10 +95,6 @@ function isToday(date: Date): unknown {
     )
 }
 
-export async function srsFunc(user_id: string, card_id: string, seen: boolean) {
-    await cardRelationshipExists(user_id, card_id, seen);
-    //await readyForReview(user_id, card_id);
-}
 
 
 export async function readyForReview(user_id: string, limit: number) {//* could make this universal by making db.---(user_id) and the ---- is a paramater passed down?
