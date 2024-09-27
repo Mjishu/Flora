@@ -12,6 +12,16 @@ interface answers {
     selected: boolean | undefined;
 }
 
+interface quiz {
+    id: string;
+    user_id: string;
+    quiz_id: string,
+    created_at: Date;
+    completed_at: Date | null;
+    progress: string;
+    score: number;
+}
+
 interface User {
     username: string;
     email: string;
@@ -21,7 +31,7 @@ interface User {
 
 function useData(url: string, quiz_id: string, currentUser: User) {
     const [data, setData] = React.useState<answers[] | undefined>(undefined)
-    const [quiz, setQuiz] = React.useState(undefined)
+    const [quiz, setQuiz] = React.useState<quiz | undefined>(undefined)
     const [loading, setLoading] = React.useState(true)
 
 
@@ -37,7 +47,7 @@ function useData(url: string, quiz_id: string, currentUser: User) {
             .then(res => res.json())
             .then(data => {
                 setData(data.answers)
-                setQuiz(data.user_quiz)
+                setQuiz(data.user_quiz[0])
             })
             .catch(err => console.error(`error fetching ${url}: ${err}`))
             .finally(() => setLoading(false))
@@ -50,12 +60,12 @@ function PlantQuiz() {
     const { data: quizAnswers, quiz, loading } = useData("/api/quiz/details", "ee404454-b115-4c5e-b907-1899f6207f41", currentUser)
     const [selected, setSelected] = React.useState<string[]>([]);
 
-    /*//*For item in mappedAnswers, if answer.id in selected => give that item a class of detail_button_selected */
+
 
     if (loading || userLoading) {
         return <h1>Loading...</h1>
     }
-    if (!loading && !quizAnswers) {
+    if (!loading && !quizAnswers || !quiz) {
         return <h1>Couldn't find quiz </h1>
     }
 
@@ -79,28 +89,29 @@ function PlantQuiz() {
     function arraysEqual(arr1: string[] | undefined, arr2: string[]) {
         if (arr1?.length !== arr2.length) { return false }
         for (let i = 0; i < selected.length; i++) {
-            if (arr1[i] !== arr2[i]) { return false }
+            if (arr1.sort()[i] !== arr2.sort()[i]) { return false }
         }
         return true
     }
 
     function handleSubmit() {
-        const correctAnswers = quizAnswers?.filter(answer => answer.is_correct === true).map(answer => answer.id) //* shuld sort this and selected
+        if (!quiz) { return console.error("cannot find quiz") }
+        const token = localStorage.getItem("token")
+        if (!token) { return console.error("Cannot find login token") }
+        const correctAnswers = quizAnswers?.filter(answer => answer.is_correct === true).map(answer => answer.id)
 
         const arrEquals = arraysEqual(correctAnswers, selected)
 
-        console.log(`selected answers: ${selected.sort()}\ncorrect answers: ${correctAnswers?.sort()}`)
         if (arrEquals) {
             console.log("You got it correct")
+            fetch(`/api/quiz/details/${quiz.quiz_id}/update`, { headers: { Authorization: token } })
+                .then(res => res.json())
+                .then(data => console.log(data))
+                .catch(err => console.error(`there was an error updating quiz data: ${err}`))
         } else {
             console.log("Incorrect try again!")
+            return
         }
-        console.log(arrEquals)
-        // if (selected.sort() === correctAnswers?.sort()) {
-        //     console.log("You got them correct!")
-        // } else {
-        //     console.log("Incorrect try again!")
-        // }
     }
 
     return (

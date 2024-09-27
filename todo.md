@@ -35,6 +35,8 @@
 
 ## Backend
 
+-[ ] Make it so I can create quizzes, right now you just get quizzes I think instead of creating some?
+
     - [ ] Next_review time should be at  x time on the same day everyday, maybe go for a 2 am approach where Last last_seen + interval Math.floors into the previous 2AM?
             Because every card thats next_review is on the 20th should be viewable at the same time on the 20th, one shouldnt be available at 9am and then next not untill 4pm.
     ** I feel like I have this implemented, im getting true for a date being greater than the next interval time BUT the card isnt sending in the test? so

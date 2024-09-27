@@ -31,6 +31,10 @@ export async function get_quiz_details(req: Request, res: Response) { //* should
     return res.status(200).json({ success: true, answers: quiz_answers.rows, user_quiz: user_join_quiz.rows })
 }
 
-export async function check_quiz_details(req: Request, res: Response) {
-    console.log(req.body)
+export async function update_quiz_details(req: Request, res: Response) {
+    if (!req.user) { return res.status(400).json({ message: "Not logged in", success: false }) }
+    const quiz_id = req.params.id
+    //*fetch the entry and then set completed/progress to completed  //? what to do with score? 
+    await pool.query("UPDATE user_quiz_details SET progress = 'completed',completed_at = NOW() WHERE quiz_id = $1 AND user_id=$2", [quiz_id, req.user.id]) //* make now() for users timezone?
+    res.send({ message: "update function called", success: true })
 }
