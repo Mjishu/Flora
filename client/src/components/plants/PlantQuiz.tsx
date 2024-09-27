@@ -1,12 +1,13 @@
 import React from 'react'
 import { UseUser } from "../user/userContext"
 import style from "../../styles/quiz.module.css"
+import Navbar from '../general/Navbar'
 
 interface answers {
     id: string;
     quiz_id: string;
     answer: string;
-    is_correct: false;
+    is_correct: boolean;
     created_at: Date;
     selected: boolean | undefined;
 }
@@ -47,16 +48,9 @@ function useData(url: string, quiz_id: string, currentUser: User) {
 function PlantQuiz() {
     const { currentUser, userLoading } = UseUser(); //* why is quiz unknow here
     const { data: quizAnswers, quiz, loading } = useData("/api/quiz/details", "ee404454-b115-4c5e-b907-1899f6207f41", currentUser)
-    const [mappedAnswers, setMappedAnswers] = React.useState<answers[]>([])
+    const [selected, setSelected] = React.useState<string[]>([]);
 
-    React.useEffect(() => {
-        if (quizAnswers) {
-            const initiliazedAnswers = quizAnswers.map(answer => ({
-                ...answer, selected: false
-            }));
-            setMappedAnswers(initiliazedAnswers);
-        }
-    }, [quizAnswers])
+    /*//*For item in mappedAnswers, if answer.id in selected => give that item a class of detail_button_selected */
 
     if (loading || userLoading) {
         return <h1>Loading...</h1>
@@ -66,28 +60,55 @@ function PlantQuiz() {
     }
 
     function handleDetailClick(answer: answers) {
-        const updatedAnswers = mappedAnswers.map(mapAnswer => mapAnswer.id === answer.id ? { ...answer, selected: !answer.selected } : answer);
-        setMappedAnswers(updatedAnswers);
+        if (selected.includes(answer.id)) {
+            setSelected(prevSelected => prevSelected.filter(id => id !== answer.id))
+            return
+        }
+        setSelected(prevSelected => [...prevSelected, answer.id])
     }
 
-    const renderedAnswers = mappedAnswers.map((answer: answers) => {//* On button click it should give this the class of either correct or incorrect button
-        answer.selected = false;
+    const mappedAnswers = quizAnswers?.map((answer: answers) => {//* instead of is_correct -> selected //! should this go into a useEffect?
+        const is_selected = selected.includes(answer.id)
         return (
-            < button key={answer.id} className={`${style.quiz_detail_buttons} ${answer.selected && style.detail_button_selected}`} onClick={() => handleDetailClick(answer)}>
+            < button key={answer.id} className={`${style.quiz_detail_buttons} ${is_selected && style.detail_button_selected}`} onClick={() => handleDetailClick(answer)}>
                 <h5> {answer.answer}</h5>
             </button >
         )
     });
 
+    function arraysEqual(arr1: string[] | undefined, arr2: string[]) {
+        if (arr1?.length !== arr2.length) { return false }
+        for (let i = 0; i < selected.length; i++) {
+            if (arr1[i] !== arr2[i]) { return false }
+        }
+        return true
+    }
+
     function handleSubmit() {
-        console.log("You submitted!")
+        const correctAnswers = quizAnswers?.filter(answer => answer.is_correct === true).map(answer => answer.id) //* shuld sort this and selected
+
+        const arrEquals = arraysEqual(correctAnswers, selected)
+
+        console.log(`selected answers: ${selected.sort()}\ncorrect answers: ${correctAnswers?.sort()}`)
+        if (arrEquals) {
+            console.log("You got it correct")
+        } else {
+            console.log("Incorrect try again!")
+        }
+        console.log(arrEquals)
+        // if (selected.sort() === correctAnswers?.sort()) {
+        //     console.log("You got them correct!")
+        // } else {
+        //     console.log("Incorrect try again!")
+        // }
     }
 
     return (
         <div className={style.content}>
+            <Navbar />
             <h1>Plant Quiz</h1>
             <div className={style.mapped_answer_holder}>
-                {renderedAnswers}
+                {mappedAnswers}
             </div>
             <button onClick={handleSubmit}>Submit</button>
         </div>
