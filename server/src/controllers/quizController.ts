@@ -29,9 +29,12 @@ export async function get_quiz_details(req: Request, res: Response) { //* should
 
     const quiz_details = await pool.query("SELECT qd.* from quiz_details qd JOIN user_card_data ucd ON qd.card_id = ucd.card_id WHERE ucd.user_id = $1", [req.user.id])
 
-    // const user_join_quiz = await pool.query("SELECT * FROM quiz_details WHERE  card_id = $1", [card_id])
-    const quiz_answers = await pool.query("SELECT * FROM quiz_details_answers WHERE quiz_id = $1 LIMIT $2", [quiz_details.rows[0].id, 4])//* how to limit to 4 and making n of them have is_correct = true
-    return res.status(200).json({ success: true, answers: quiz_answers.rows, user_quiz: quiz_details.rows })
+    const answers = []
+    for (let i = 0; i < quiz_details.rows.length; i++) {
+        const { rows } = await pool.query("SELECT * FROM quiz_details_answers WHERE quiz_id = $1 LIMIT $2", [quiz_details.rows[i].id, 4])//* how to limit to 4 and making n of them have is_correct = true
+        answers.push(rows)
+    }
+    return res.status(200).json({ success: true, answers: answers, user_quiz: quiz_details.rows })
 }
 
 export async function insert_quiz_details(req: Request, res: Response) {

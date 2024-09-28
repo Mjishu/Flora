@@ -28,3 +28,17 @@
     border: 2px solid hsl(var(--green));
     color:hsl(var(--green))
 }
+
+.submit_quiz{
+    width: 8rem;
+    height:2rem;
+    border: 1px solid rgb(206, 204, 204);
+    border-radius: 5px;
+    background-color: hsl(var(--off-white));
+    box-shadow: 0 3px 5px rgb(199, 197, 197);
+}
+.submit_quiz:hover{
+    background-color: hsl(var(--background-black),0.5);
+    color: hsl(var(--off-white));
+    font-weight:700
+}

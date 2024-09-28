@@ -25,6 +25,8 @@
 
 ## Frontend
 
+-[ ] when submit button pressed, go to the next quiz**
+
     - [X] Make home page, should keep in  mind for more tabs. But have a button to click to go to the plants page 
 
     - [x] Profile page with editible features
@@ -35,8 +37,9 @@
 
 ## Backend
 
--[ ] Make it so I can create quizzes, right now you just get quizzes I think instead of creating some?
+-[x] Make it so I can create quizzes, right now you just get quizzes I think instead of creating some?
     should i make a new test for the user each time they respond to a new card
+-[ ] when one of the questions is answered go to the next question, do this until you run out of cards(that x user has seen)
 
     - [ ] Next_review time should be at  x time on the same day everyday, maybe go for a 2 am approach where Last last_seen + interval Math.floors into the previous 2AM?
             Because every card thats next_review is on the 20th should be viewable at the same time on the 20th, one shouldnt be available at 9am and then next not untill 4pm.
@@ -54,3 +57,7 @@
     2. 
         New E-factor formula: EF':= EF + (0.1-(5-q)*(0.08+(5-q)*0.02))
         EF' = new ease factor | EF old ease factor | q quality of response(time taken, or more weight to some answers) | if EF < 1.3 ef = 1.3. 
+
+## Issues
+
+-Misstype in Sago Palm description: typicall about 20cm in diameter

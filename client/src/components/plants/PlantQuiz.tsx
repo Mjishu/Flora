@@ -47,7 +47,7 @@ function useData(url: string, currentUser: User) {
             .then(res => res.json())
             .then(data => {
                 setData(data.answers)
-                setQuiz(data.user_quiz[0])
+                setQuiz(data.user_quiz)
             })
             .catch(err => console.error(`error fetching ${url}: ${err}`))
             .finally(() => setLoading(false))
@@ -59,13 +59,15 @@ function PlantQuiz() {
     const { currentUser, userLoading } = UseUser(); //* why is quiz unknow here
     const { data: quizAnswers, quiz, loading } = useData("/api/quiz/details", currentUser)
     const [selected, setSelected] = React.useState<string[]>([]);
+    const [quizNumber, setQuizNumber] = React.useState(0);
 
-
+    console.log(quiz)
+    // console.log(quizAnswers)
 
     if (loading || userLoading) {
         return <h1>Loading...</h1>
     }
-    if (!loading && !quizAnswers || !quiz) {
+    if (!quizAnswers || !quiz) {
         return <h1>Couldn't find quiz </h1>
     }
 
@@ -77,7 +79,7 @@ function PlantQuiz() {
         setSelected(prevSelected => [...prevSelected, answer.id])
     }
 
-    const mappedAnswers = quizAnswers?.map((answer: answers) => {//* instead of is_correct -> selected //! should this go into a useEffect?
+    const mappedAnswers = quizAnswers[quizNumber]?.map((answer: answers) => {//* instead of is_correct -> selected //! should this go into a useEffect?
         const is_selected = selected.includes(answer.id)
         return (
             < button key={answer.id} className={`${style.quiz_detail_buttons} ${is_selected && style.detail_button_selected}`} onClick={() => handleDetailClick(answer)}>
@@ -98,16 +100,17 @@ function PlantQuiz() {
         if (!quiz) { return console.error("cannot find quiz") }
         const token = localStorage.getItem("token")
         if (!token) { return console.error("Cannot find login token") }
-        const correctAnswers = quizAnswers?.filter(answer => answer.is_correct === true).map(answer => answer.id)
+        const correctAnswers = quizAnswers[quizNumber]?.filter(answer => answer.is_correct === true).map(answer => answer.id)
 
         const arrEquals = arraysEqual(correctAnswers, selected)
-
+        console.log(`selected is ${selected} and correct answers are ${correctAnswers}`)
         if (arrEquals) {
             console.log("You got it correct")
-            fetch(`/api/quiz/details/${quiz.id}`, { headers: { Authorization: token } })
+            fetch(`/api/quiz/details/${quiz[quizNumber].id}`, { headers: { Authorization: token } })
                 .then(res => res.json())
                 .then(data => console.log(data))
                 .catch(err => console.error(`there was an error updating quiz data: ${err}`))
+            setQuizNumber(prevNumber => prevNumber += 1)
         } else {
             console.log("Incorrect try again!")
             return
@@ -121,7 +124,7 @@ function PlantQuiz() {
             <div className={style.mapped_answer_holder}>
                 {mappedAnswers}
             </div>
-            <button onClick={handleSubmit}>Submit</button>
+            <button onClick={handleSubmit} className={`${style.submit_quiz} `}>Submit</button>
         </div>
     )
 }
