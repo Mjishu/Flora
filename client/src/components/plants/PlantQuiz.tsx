@@ -121,10 +121,15 @@ function PlantQuiz() {
         <div className={style.content}>
             <Navbar />
             <h1>Plant Quiz</h1>
-            <div className={style.mapped_answer_holder}>
-                {mappedAnswers}
-            </div>
-            <button onClick={handleSubmit} className={`${style.submit_quiz} `}>Submit</button>
+            {
+                quizAnswers.length < 1 ? <h3>No quiz Available</h3> :
+                    <div>
+                        <div className={style.mapped_answer_holder}>
+                            {mappedAnswers}
+                        </div>
+                        <button onClick={handleSubmit} className={`${style.submit_quiz} `}>Submit</button>
+                    </div>
+            }
         </div>
     )
 }

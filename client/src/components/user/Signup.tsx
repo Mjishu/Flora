@@ -1,5 +1,5 @@
 import React from 'react';
-import style from "../../styles/authentication.module.css";
+import style from "../../styles/user/authentication.module.css";
 import authService from '../../auth/authService';
 const AuthService = new authService();
 import { useNavigate } from 'react-router-dom';

@@ -27,19 +27,22 @@
 
 -[ ] when submit button pressed, go to the next quiz**
 
-    - [X] Make home page, should keep in  mind for more tabs. But have a button to click to go to the plants page 
+- [ ] How to go to next card for flashcards
 
-    - [x] Profile page with editible features
+  - [X] Make home page, should keep in  mind for more tabs. But have a button to click to go to the plants page
 
-    - [ ] Fix types in Card.tsx OR make a types file and then use the types in each respective file.
-    
-    - [ ] using left and right arrow doesnt work right now unless i click the button holding the card? if i click anywhere on the page it doesnt work
+  - [x] Profile page with editible features
+
+  - [ ] Fix types in Card.tsx OR make a types file and then use the types in each respective file.
+
+  - [ ] using left and right arrow doesnt work right now unless i click the button holding the card? if i click anywhere on the page it doesnt work
 
 ## Backend
 
 -[x] Make it so I can create quizzes, right now you just get quizzes I think instead of creating some?
     should i make a new test for the user each time they respond to a new card
 -[ ] when one of the questions is answered go to the next question, do this until you run out of cards(that x user has seen)
+-[ ] send questions only for cards that are ready? or should cards be able to be seen whenever?
 
     - [ ] Next_review time should be at  x time on the same day everyday, maybe go for a 2 am approach where Last last_seen + interval Math.floors into the previous 2AM?
             Because every card thats next_review is on the 20th should be viewable at the same time on the 20th, one shouldnt be available at 9am and then next not untill 4pm.

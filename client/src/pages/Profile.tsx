@@ -1,6 +1,6 @@
 import React from 'react';
 import { UseUser } from '../components/user/userContext';
-import style from "../styles/profile.module.css";
+import style from "../styles/user/profile.module.css";
 import Navbar from '../components/general/Navbar';
 
 interface timezoneInterface {

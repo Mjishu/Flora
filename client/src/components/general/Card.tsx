@@ -10,6 +10,7 @@ type CardProps = {
     handleKnown: any;
     handleUnknown: any;
     cardFlipped: any;
+    cardDirection: string | undefined;
 }
 
 type reverseCardProps = {
@@ -25,11 +26,12 @@ type reverseCardProps = {
     cardFlipped: any;
     description: string;
     is_invasive: boolean;
+    cardDirection: string | undefined;
 }
 
 export function Card(props: CardProps) {
     return (
-        <div>
+        <div className={`${style.card_holder} ${props.cardDirection ? style[props.cardDirection] : ""}`}>
             <h3>{props.common_name}</h3>
             {props.image && <button tabIndex={0} className={style.imageButton} onClick={props.cardFlipped}>
                 <img src={props.image} className={`${style.CardImage} shadow2`} />
@@ -38,13 +40,13 @@ export function Card(props: CardProps) {
                 </div>} */}
             </button>}
             <div className={style.buttonHolder}>
-                <button tabIndex={0} className={`${style.answerButton} shadow1`} onClick={async () => await props.handleUnknown} >
+                <button tabIndex={0} className={`${style.answerButton} shadow1`} onClick={async () => await props.handleUnknown()} >
                     <span className={style.answerButtonUnknown}>
                         <img className={style.buttonSvg} src="/icons/X.svg" alt="Unknown" />
                     </span>
                 </button>
-                <button tabIndex={0} className={`${style.answerButton} shadow1`} onClick={async () => await props.handleKnown}>
-                    <span className={style.answerButtonKnown}>
+                <button tabIndex={0} className={`${style.answerButton} shadow1`} onClick={async () => await props.handleKnown()}>
+                    <span className={style.ansswerButtonKnown}>
                         <img className={style.buttonSvg} src="/icons/Checkmark.svg" alt="Known" />
                     </span>
                 </button>
@@ -57,7 +59,7 @@ export function Card(props: CardProps) {
 export function ReverseCard(props: reverseCardProps) {
 
     return (
-        <div>
+        <div className={style.card_holder}>
             <button className={style.imageButton} onClick={props.cardFlipped} tabIndex={0}>
                 <div className={`${style.reverseCard}`}>
                     <div>

@@ -1,0 +1,10 @@
+.content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card_board{
+    overflow: hidden;
+    margin: 0 auto;
+}
