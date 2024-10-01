@@ -30,9 +30,13 @@ export const floridaTrees = asyncHandler(async (req, res, next) => {
 
 export async function se_plants_na(req: Request, res: Response) {
     if (!req.user) { return res.json({ message: "You are not logged in" }) }
-    const cards: plant_data[] = await srs.readyForReview(req.user.id, 10) //* 10 here is the limit for the amount of new cards shown
-    // const plants: plant_data[] = await db.getSETreesNA()
-    res.send(cards)
+    try {
+        const cards: plant_data[] = await srs.readyForReview(req.user.id, 10) //* 10 here is the limit for the amount of new cards shown
+        res.json(cards)
+    } catch (error) {
+        console.error(`Error in se_plants_na: ${error}`);
+        res.status(500).json({ message: "error occured", success: false })
+    }
 }
 //*/
 export async function getFloridaTrees(req: Request, res: Response) { //* unused

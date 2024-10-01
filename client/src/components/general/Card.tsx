@@ -4,26 +4,20 @@ import style from "../../styles/card.module.css"
 type CardProps = {
     image: string;
     common_name: string;
-    plantNumber: number;
-    setPlantNumber: (value: (prevNumber: number) => number) => void;
-    plantsLength: number;
-    handleKnown: any;
-    handleUnknown: any;
-    cardFlipped: any;
+    handleKnown: () => Promise<void>;
+    handleUnknown: () => Promise<void>;
+    cardFlipped: () => void;
     cardDirection: string | undefined;
 }
 
 type reverseCardProps = {
     common_name: string;
-    plantNumber: number;
-    setPlantNumber: (value: (prevNumber: number) => number) => void;
-    plantsLength: number;
-    handleKnown: any;
-    handleUnknown: any;
+    handleKnown: () => Promise<void>;
+    handleUnknown: () => Promise<void>;
     genus: string;
     scientific_name: string;
     family: string;
-    cardFlipped: any;
+    cardFlipped: () => void;
     description: string;
     is_invasive: boolean;
     cardDirection: string | undefined;
@@ -40,12 +34,12 @@ export function Card(props: CardProps) {
                 </div>} */}
             </button>}
             <div className={style.buttonHolder}>
-                <button tabIndex={0} className={`${style.answerButton} shadow1`} onClick={async () => await props.handleUnknown()} >
+                <button tabIndex={0} className={`${style.answerButton} shadow1`} onClick={() => props.handleUnknown()} >
                     <span className={style.answerButtonUnknown}>
                         <img className={style.buttonSvg} src="/icons/X.svg" alt="Unknown" />
                     </span>
                 </button>
-                <button tabIndex={0} className={`${style.answerButton} shadow1`} onClick={async () => await props.handleKnown()}>
+                <button tabIndex={0} className={`${style.answerButton} shadow1`} onClick={() => props.handleKnown()}>
                     <span className={style.ansswerButtonKnown}>
                         <img className={style.buttonSvg} src="/icons/Checkmark.svg" alt="Known" />
                     </span>

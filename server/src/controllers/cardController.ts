@@ -12,8 +12,14 @@ export async function cardKnown(req: Request, res: Response) {
         res.json({ message: "User is not logged in", success: false })
         return
     }
-    srs.srsFunc(req.user.id, req.body.card_id, req.body.seen)
-    res.json({ message: "You knew this card" })
+    try {
+
+        await srs.srsFunc(req.user.id, req.body.card_id, req.body.seen)
+        res.json({ message: "You knew this card" })
+    } catch (err) {
+        console.error(`error in cardknown: ${err}`)
+        res.status(500).json({ message: "Error occured", success: false })
+    }
 }
 
 export async function cardUnknown(req: Request, res: Response) {
@@ -21,8 +27,13 @@ export async function cardUnknown(req: Request, res: Response) {
         res.json({ message: "User is not logged in", success: false })
         return
     }
-    srs.srsFunc(req.user.id, req.body.card_id, req.body.seen)
-    res.json({ message: "You did not know this card" })
+    try {
+        await srs.srsFunc(req.user.id, req.body.card_id, req.body.seen)
+        res.json({ message: "You did not know this card" })
+    } catch (err) {
+        console.error(`error in cardunknown: ${err}`)
+        res.status(500).json({ message: "Error occured", success: false })
+    }
 }
 
 export async function isCardReady(req: Request, res: Response) {

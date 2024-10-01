@@ -1,16 +1,6 @@
 import * as db from "./db/plantQueries.js";
 import * as pool from "./db/pool.js";
 
-/*
-    * [x] check if card is new (date is today and n is < 2)
-    * [x] if card is new, make a new entry into the user_card_data table with the current users id and the current cards id.
-    * [x] else if the card is not new, find that entry in the user_card_data and update the information.
-    * [x] if the card is seen for the 'first time' on the first day, make the next time it should be seen in 10 minutes~
-    * [x] if card has a streak >= 1 and then presses unknown: set the interval to 10 minutes OR if its the same day set the interval back down to 1 minute
-    * [ ] send card to front end if it is ready
-    * [ ] Check if card is ready to be sent i.e if the interval and date_lastseen matchup, How to add the interval to the last_seen property and check if that time has passed>?
- */
-
 interface new_card {
     user_id: string;
     card_id: string;
@@ -100,6 +90,12 @@ function isToday(date: Date): unknown {
 export async function readyForReview(user_id: string, limit: number) {//* could make this universal by making db.---(user_id) and the ---- is a paramater passed down?
     const cardsReady = await db.cardsReady(user_id);
     const unseenCards = await db.unseenCards(user_id, limit);
-    const cards = cardsReady.concat(unseenCards)
+    const cards = cardsReady.concat(unseenCards);
+    console.log("--------------- ready")
+    cardsReady.forEach(card => console.log(card.common_name))
+    console.log("--------------- new")
+    unseenCards.forEach(card => console.log(card.common_name))
+    console.log("--------------- Joined")
+    cards.forEach(card => console.log(card.common_name)) //! when card is answered this still shows the prev card in the mix, 
     return cards
 }
