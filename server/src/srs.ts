@@ -91,11 +91,5 @@ export async function readyForReview(user_id: string, limit: number) {//* could 
     const cardsReady = await db.cardsReady(user_id);
     const unseenCards = await db.unseenCards(user_id, limit);
     const cards = cardsReady.concat(unseenCards);
-    console.log("--------------- ready")
-    cardsReady.forEach(card => console.log(card.common_name))
-    console.log("--------------- new")
-    unseenCards.forEach(card => console.log(card.common_name))
-    console.log("--------------- Joined")
-    cards.forEach(card => console.log(card.common_name)) //! when card is answered this still shows the prev card in the mix, 
     return cards
 }

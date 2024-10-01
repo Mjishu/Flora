@@ -25,9 +25,8 @@ export async function create_quiz_details(req: Request, res: Response) {
 
 export async function get_quiz_details(req: Request, res: Response) { //* should select the answers as well
     if (!req.user) { return res.status(400).json({ message: "Not logged in", success: false }) }
-    const { quiz_id } = req.body
 
-    const quiz_details = await pool.query("SELECT qd.* from quiz_details qd JOIN user_card_data ucd ON qd.card_id = ucd.card_id WHERE ucd.user_id = $1", [req.user.id])
+    const quiz_details = await pool.query("SELECT qd.*,p.common_name from quiz_details qd  JOIN user_card_data ucd ON qd.card_id = ucd.card_id JOIN plants p ON qd.card_id = p.id WHERE ucd.user_id = $1", [req.user.id])
 
     const answers = []
     for (let i = 0; i < quiz_details.rows.length; i++) {

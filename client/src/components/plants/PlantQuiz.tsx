@@ -61,8 +61,6 @@ function PlantQuiz() {
     const [selected, setSelected] = React.useState<string[]>([]);
     const [quizNumber, setQuizNumber] = React.useState(0);
 
-    console.log(quiz)
-    // console.log(quizAnswers)
 
     if (loading || userLoading) {
         return <h1>Loading...</h1>
@@ -111,6 +109,7 @@ function PlantQuiz() {
                 .then(data => console.log(data))
                 .catch(err => console.error(`there was an error updating quiz data: ${err}`))
             setQuizNumber(prevNumber => prevNumber += 1)
+            setSelected([])
         } else {
             console.log("Incorrect try again!")
             return
@@ -124,6 +123,7 @@ function PlantQuiz() {
             {
                 quizAnswers.length < 1 ? <h3>No quiz Available</h3> :
                     <div>
+                        <h3>{quiz && quiz[quizNumber].common_name}</h3>
                         <div className={style.mapped_answer_holder}>
                             {mappedAnswers}
                         </div>

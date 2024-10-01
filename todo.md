@@ -21,13 +21,15 @@
 
 ## General IMPORTANT ONES HERE
 
-- [ ] If I get through all my cards it bugs out, starts showing current cards again but they shouldnt be able to be seen | I have to reload for it to work so I need a dependency or something for it to check on so that it checks without needing window reload
+- [ ] Once a quiz is done I shouldnt be able to do it for x time? I don't want the quiz to show up after i finish when i reload the page
 
 ## Frontend
 
--[ ] when submit button pressed, go to the next quiz**
+-[ ] when you finish all quizzes show a screen to say so
 
-- [ ] How to go to next card for flashcards
+-[x] when submit button pressed, go to the next quiz**
+
+- [x] How to go to next card for flashcards
 
   - [X] Make home page, should keep in  mind for more tabs. But have a button to click to go to the plants page
 
