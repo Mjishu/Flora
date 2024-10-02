@@ -14,6 +14,7 @@ interface answers {
 
 interface quiz {
     id: string;
+    common_name: string;
     user_id: string;
     quiz_id: string,
     created_at: Date;
@@ -29,9 +30,9 @@ interface User {
     zone: string
 }
 
-function useData(url: string, currentUser: User) {
+function useData(url: string, currentUser: User | null) {
     const [data, setData] = React.useState<answers[] | undefined>(undefined)
-    const [quiz, setQuiz] = React.useState<quiz | undefined>(undefined)
+    const [quiz, setQuiz] = React.useState<quiz[] | undefined>(undefined)
     const [loading, setLoading] = React.useState(true)
 
 
@@ -77,14 +78,15 @@ function PlantQuiz() {
         setSelected(prevSelected => [...prevSelected, answer.id])
     }
 
-    const mappedAnswers = quizAnswers[quizNumber]?.map((answer: answers) => {//* instead of is_correct -> selected //! should this go into a useEffect?
+    //* instead of is_correct -> selected //! should this go into a useEffect?
+    const mappedAnswers = Array.isArray(quizAnswers[quizNumber]) ? quizAnswers[quizNumber]?.map((answer: answers) => {
         const is_selected = selected.includes(answer.id)
         return (
             < button key={answer.id} className={`${style.quiz_detail_buttons} ${is_selected && style.detail_button_selected}`} onClick={() => handleDetailClick(answer)}>
                 <h5> {answer.answer}</h5>
             </button >
         )
-    });
+    }) : [];
 
     function arraysEqual(arr1: string[] | undefined, arr2: string[]) {
         if (arr1?.length !== arr2.length) { return false }
@@ -95,10 +97,10 @@ function PlantQuiz() {
     }
 
     function handleSubmit() {
-        if (!quiz) { return console.error("cannot find quiz") }
+        if (!quiz || !quizAnswers) { return console.error("cannot find quiz") }
         const token = localStorage.getItem("token")
         if (!token) { return console.error("Cannot find login token") }
-        const correctAnswers = quizAnswers[quizNumber]?.filter(answer => answer.is_correct === true).map(answer => answer.id)
+        const correctAnswers = Array.isArray(quizAnswers[quizNumber]) ? quizAnswers[quizNumber]?.filter(answer => answer.is_correct === true).map(answer => answer.id) : []
 
         const arrEquals = arraysEqual(correctAnswers, selected)
         console.log(`selected is ${selected} and correct answers are ${correctAnswers}`)
