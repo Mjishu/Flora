@@ -25,14 +25,11 @@
 
 ## Frontend
 
--[ ] when you finish all quizzes show a screen to say so
+-[x] when you finish all quizzes show a screen to say so
 
 ## Backend
 
--[x] Make it so I can create quizzes, right now you just get quizzes I think instead of creating some?
-    should i make a new test for the user each time they respond to a new card
--[x] when one of the questions is answered go to the next question, do this until you run out of cards(that x user has seen)
--[x] send questions only for cards that are ready? or should cards be able to be seen whenever?
+-[ ] Make it more targeted for quizzes? (do i make lessons for different plants? and put the quizzes there? or what do i do with the quizzes)
 
     - [ ] Next_review time should be at  x time on the same day everyday, maybe go for a 2 am approach where Last last_seen + interval Math.floors into the previous 2AM?
             Because every card thats next_review is on the 20th should be viewable at the same time on the 20th, one shouldnt be available at 9am and then next not untill 4pm.

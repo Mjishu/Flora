@@ -123,7 +123,7 @@ function PlantQuiz() {
             <Navbar />
             <h1>Plant Quiz</h1>
             {
-                quizAnswers.length < 1 ? <h3>No quiz Available</h3> :
+                quizAnswers.length < 1 || quizNumber >= quiz.length ? <h3>No quizzes Available</h3> :
                     <div>
                         <h3>{quiz && quiz[quizNumber].common_name}</h3>
                         <div className={style.mapped_answer_holder}>
