@@ -66,11 +66,10 @@ export default function PlantHome() {
           "Content-Type": "application/json",
           Authorization: token
         },
-        body: JSON.stringify({ card_id: currentPlant.id, seen: known })
+        body: JSON.stringify({ creature_id: currentPlant.id, seen: known })
       }
 
-
-      const response = await fetch(`/api/cards/${known ? "known" : "unknown"}`, fetchParams)
+      const response = await fetch(`/api/cards/answer`, fetchParams)
 
       if (!response.ok) {
         throw new Error(`Http status error: ${response.status}`)

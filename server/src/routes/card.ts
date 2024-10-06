@@ -5,9 +5,7 @@ import * as cardController from "../controllers/cardController.js";
 import * as utils from "../../auth/utils.js";
 
 //* These routes should probably be protected(need to be logged in)
-router.post("/known", utils.authenticateJwt, cardController.cardKnown);
-
-router.post("/unknown", utils.authenticateJwt, cardController.cardUnknown);
+router.post("/answer", utils.authenticateJwt, cardController.cardAnswer);
 
 router.post("/is-ready", utils.authenticateJwt, cardController.isCardReady);
 

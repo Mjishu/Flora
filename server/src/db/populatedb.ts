@@ -99,16 +99,51 @@ async function insert_answers() {
     }
 }
 
-async function main() {
-    console.log("seeding...")
-    const client = new Client({
-        connectionString: process.env.PSQL_URL
-    });
-    await client.connect();
-    await insert_answers() // * need to call this
-    await client.end();
-    console.log("done")
+const utc_timezones = [
+    { "zone": "Etc/GMT+12", "utc_offset": "UTC-12:00" },
+    { "zone": "Etc/GMT+11", "utc_offset": "UTC-11:00" },
+    { "zone": "Pacific/Apia", "utc_offset": "UTC-10:00" },
+    { "zone": "Pacific/Honolulu", "utc_offset": "UTC-09:00" },
+    { "zone": "America/Anchorage", "utc_offset": "UTC-08:00" },
+    { "zone": "America/Los_Angeles", "utc_offset": "UTC-07:00" },
+    { "zone": "America/Denver", "utc_offset": "UTC-06:00" },
+    { "zone": "America/Chicago", "utc_offset": "UTC-05:00" },
+    { "zone": "America/New_York", "utc_offset": "UTC-04:00" },
+    { "zone": "America/Halifax", "utc_offset": "UTC-03:00" },
+    { "zone": "America/St_Johns", "utc_offset": "UTC-02:30" },
+    { "zone": "America/Godthab", "utc_offset": "UTC-02:00" },
+    { "zone": "Etc/GMT-1", "utc_offset": "UTC-01:00" },
+    { "zone": "Etc/GMT", "utc_offset": "UTC±00:00" },
+    { "zone": "Europe/Berlin", "utc_offset": "UTC+01:00" },
+    { "zone": "Europe/Bucharest", "utc_offset": "UTC+02:00" },
+    { "zone": "Europe/Moscow", "utc_offset": "UTC+03:00" },
+    { "zone": "Asia/Baku", "utc_offset": "UTC+04:00" },
+    { "zone": "Asia/Karachi", "utc_offset": "UTC+05:00" },
+    { "zone": "Asia/Dhaka", "utc_offset": "UTC+06:00" },
+    { "zone": "Asia/Bangkok", "utc_offset": "UTC+07:00" },
+    { "zone": "Asia/Singapore", "utc_offset": "UTC+08:00" },
+    { "zone": "Asia/Tokyo", "utc_offset": "UTC+09:00" },
+    { "zone": "Australia/Sydney", "utc_offset": "UTC+10:00" },
+    { "zone": "Pacific/Guadalcanal", "utc_offset": "UTC+11:00" },
+    { "zone": "Pacific/Fiji", "utc_offset": "UTC+12:00" },
+    { "zone": "Pacific/Chatham", "utc_offset": "UTC+12:45" },
+    { "zone": "Pacific/Tongatapu", "utc_offset": "UTC+13:00" },
+    { "zone": "Pacific/Apia", "utc_offset": "UTC+14:00" }
+]
+
+export async function insert_timezones() {
+    for (let i = 0; i < utc_timezones.length; i++) {
+        const { zone, utc_offset } = utc_timezones[i]
+
+        const result = await pool.query("SELECT 1 FROM timezones WHERE zone = $1 AND utc_offset = $2", [zone, utc_offset]);
+        if (result.rowCount === 0) {
+            await pool.query("INSERT INTO timezones(zone,utc_offset) VALUES ($1,$2)", [zone, utc_offset])
+        } else {
+            console.log(`Timezone with name: ${zone} And offset: ${utc_offset} is already in timezones table`)
+            continue
+        }
+    }
 }
 
-main();
+
 
