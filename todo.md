@@ -6,7 +6,7 @@
 
 ## General IMPORTANT ONES HERE
 
-- [ ]
+- [ ] ix dependencies?(Crypto,iunflight,npmlog,rimraf,glob,are-we-there-yet,gauge)
 
 ## Frontend
 
