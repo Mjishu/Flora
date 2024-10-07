@@ -16,21 +16,6 @@ body {
     color: hsl(var(--background-black));
 }
 
-.navbar {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 2.5rem;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.navbar-link,
-.navbar-link:active,
-.navbar-link:visited {
-    color: hsl(var(--background-black));
-    text-decoration: none;
-}
 
 /* ---- */
 /* Card */

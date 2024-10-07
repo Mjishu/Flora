@@ -23,7 +23,7 @@ async function initializePool() {
     }
 }
 
-const pool = await initializePool();
+export const pool = await initializePool();
 
 export const query = (text: string, params: any) => {
     return pool.query(text, params)

@@ -7,6 +7,7 @@
 ## General IMPORTANT ONES HERE
 
 - [ ] ix dependencies?(Crypto,iunflight,npmlog,rimraf,glob,are-we-there-yet,gauge)
+- [ ] Add ability to make courses,lessons,units in sql: do it in ide, maybe add in the ability to remake the whole db?
 
 ## Frontend
 
@@ -38,3 +39,15 @@
 ## Issues
 
 -Misstype in Sago Palm description: typicall about 20cm in diameter
+
+## Tree Types
+
+Angiosperms (Flowering trees)
+    Deciduous trees (Eudicots)
+    Evergreen angiosperms
+
+Gymnosperms (Non-flowering trees)
+    Conifers (Evergreen trees)
+    Ginkgo (Deciduous)
+    Cycads
+    Gnetophytes

@@ -145,5 +145,124 @@ export async function insert_timezones() {
     }
 }
 
+const courses = `CREATE TABLE courses(id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), title varchar(90) NOT NULL, image_src text);`
+
+const units = `CREATE TABLE units(id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), title varchar(90) NOT NULL,description TEXT NOT NULL, course_id uuid REFERENCES courses(id) NOT NULL,unit_order INT NOT NULL )`
+
+const lessons = `CREATE TABLE lessons(id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),title varchar(90) NOT NULL,unit_id UUID REFERENCES units(id) NOT NULL,lesson_order INT NOT NULL)`
+
+const createEnumType = `
+    DO $$ 
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'challenge_type') THEN 
+            CREATE TYPE CHALLENGE_TYPE AS ENUM ('multiple_choice','fill_in_the_blank', 'true_false');
+        END IF;
+    END $$;
+`;
+
+const challenges = `CREATE TABLE challenges(id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),lesson_id uuid REFERENCES lessons(id) NOT NULL,type CHALLENGE_TYPE NOT NULL,challenge_order INT NOT NULL)`
+
+const challenge_options = `CREATE TABLE challenge_options(id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),challenge_id uuid REFERENCES challenges(id) NOT NULL,correct BOOLEAN NOT NULL,
+    text TEXT NOT NULL, image_src TEXT,audio_src TEXT)`
+
+const challenge_progress = `CREATE TABLE challenge_progress(id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),challenge_id uuid REFERENCES challenges(id) NOT NULL,correct BOOLEAN NOT NULL,
+    text TEXT NOT NULL,image_src TEXT,audio_src TEXT )`
 
 
+/*All relations
+    courses < units
+    units < lessons
+    lessons < challenges
+    challenges < challenge_options
+    challenges < challenge_progress
+*/
+
+export async function create_courses() { //! before calling this make the relation tables aswell
+    try {
+        await pool.query(courses, [])
+        await pool.query(units, [])
+        await pool.query(lessons, [])
+        await pool.query(createEnumType, [])
+        await pool.query(challenges, [])
+        await pool.query(challenge_options, [])
+        await pool.query(challenge_progress, [])
+    } catch (error) {
+        console.error(`Error Creating tables: ${error}`)
+    }
+}
+
+
+//* enetering into courses
+
+//Units
+
+export async function input_courses() {
+    const courses_inputs = [
+        //Courses
+        { table: "courses", title: "Flora" },
+        { table: "courses", title: "Fauna" },
+        { table: "courses", title: "Fungi" },
+    ]
+    for (let i = 0; i < courses_inputs.length; i++) {
+        const { table, title } = courses_inputs[i]
+
+        const result = await pool.query("SELECT 1 FROM courses WHERE title = $1 ", [title])
+        if (result.rowCount === 0) {
+            await pool.query("INSERT INTO courses(title) VALUES ($1)", [title])
+        } else {
+            console.log(`Record with title: ${title} already exists`)
+            continue
+        }
+    }
+}
+
+export async function input_units() {
+    const { rows } = await pool.query("SELECT id FROM courses WHERE title='Flora'", [])
+    const id = rows[0].id
+    const units_inputs = [
+        { table: "units", title: "Intro to Plants", description: "Starting from the beginning, this will make sure you have the fundamentals down", course_id: id, unit_order: 1 },
+        { table: "units", title: "Taxonomical Rankings", description: "Sure you know what a species is but what about a kingdom? a phylum? a order?", course_id: id, unit_order: 2 },
+        { table: "units", title: "Classes of Plants", description: "What are the different types of plants? what is an angiosperm and what's a gymnosperm?", course_id: id, unit_order: 3 },
+        { table: "units", title: "Regions", description: "Where do different plants grow, do plants have similar traits in different locations?", course_id: id, unit_order: 4 },
+        { table: "units", title: "Identifying Plants", description: "Get a basic understanding of how to identify different plants", course_id: id, unit_order: 5 },
+        { table: "units", title: "Invasive Species", description: "Why are invasive species so devastating and why is conservation important?", course_id: id, unit_order: 6 },
+    ]
+    for (let i = 0; i < units_inputs.length; i++) {
+        const { table, title, description, course_id, unit_order } = units_inputs[i]
+
+        const result = await pool.query("SELECT 1 FROM units WHERE title = $1 AND description = $2", [title, description])
+        if (result.rowCount === 0) {
+            await pool.query("INSERT INTO units(title,description,course_id,unit_order) VALUES ($1,$2,$3,$4)", [title, description, course_id, unit_order])
+        } else {
+            console.log(`Record with title: ${title} already exists`)
+            continue
+        }
+    }
+}
+
+export async function input_lessons() {
+    const lessons_inputs = [
+        //*unit_id = await pool.query("select unit_id from courses where title="Intro to Plants")
+        { table: "lessons", title: "What is a Plant", unit_id: "", lesson_order: 1 },
+        { table: "lessons", title: "Plants and the Environment", unit_id: "", lesson_order: 2 },
+        { table: "lessons", title: "Physiology", unit_id: "", lesson_order: 3 },
+        //*unit_id = await pool.query("select unit_id from courses where title="Taxonomical Rankings")
+        { table: "lessons", title: "Taxonomical Order", unit_id: "", lesson_order: 1 },
+        { table: "lessons", title: "General Rankings", unit_id: "", lesson_order: 2 },
+        { table: "lessons", title: "Specific Ranking", unit_id: "", lesson_order: 3 },
+        { table: "lessons", title: "Clades and More", unit_id: "", lesson_order: 4 },
+        //*unit_id = await pool.query("select unit_id from courses where title="Classes of Plants")
+        { table: "lessons", title: "Grouping of Plants", unit_id: "", lesson_order: 1 },
+        { table: "lessons", title: "Into Angiosperms", unit_id: "", lesson_order: 2 },
+        { table: "lessons", title: "Into Gymnosperms", unit_id: "", lesson_order: 3 },
+        { table: "lessons", title: "Other Groupings", unit_id: "", lesson_order: 4 },
+        //*unit_id = await pool.query("select unit_id from courses where title="Regions")
+        { table: "lessons", title: "Overview of Regions", unit_id: "", lesson_order: 1 },
+        { table: "lessons", title: "Forests", unit_id: "", lesson_order: 2 }, //taiga,boreal,decidious forest
+        { table: "lessons", title: "Deserts", unit_id: "", lesson_order: 3 },
+        { table: "lessons", title: "Marine", unit_id: "", lesson_order: 4 },
+        { table: "lessons", title: "Tundra", unit_id: "", lesson_order: 5 },
+        { table: "lessons", title: "Grasslands", unit_id: "", lesson_order: 6 },
+        { table: "lessons", title: "Rain Forests", unit_id: "", lesson_order: 7 },
+    ]
+}

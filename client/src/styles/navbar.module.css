@@ -1,0 +1,15 @@
+.navbar {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 2.5rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar_link,
+.navbar_link:active,
+.navbar_link:visited {
+    color: hsl(var(--background-black));
+    text-decoration: none;
+}

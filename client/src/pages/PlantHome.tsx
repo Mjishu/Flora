@@ -3,7 +3,6 @@ import '../App.css'
 import { Card, ReverseCard } from '../components/general/Card';
 import Navbar from '../components/general/Navbar';
 import { UseUser } from "../components/user/userContext"
-import { Link } from 'react-router-dom';
 import style from "../styles/flash-card-holder.module.css"
 
 interface Plant {
@@ -149,7 +148,6 @@ export default function PlantHome() {
               />
             )
           }
-          <Link to="/quiz">Plant Quiz</Link>
         </div>
       </div>
     </div>

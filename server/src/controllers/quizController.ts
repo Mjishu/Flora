@@ -48,3 +48,12 @@ export async function insert_quiz_details(req: Request, res: Response) {
     await pool.query("INSERT INTO user_quiz_details(user_id,quiz_id,score,progress,completed_at) VALUES ($1,$2,$3,$4, NOW())", [req.user.id, quiz_id, score, progress])
     res.send({ message: "update function called", success: true })
 }
+
+export async function get_quiz(req: Request, res: Response) {
+    const { course_id } = req.body;
+    const { rows } = await pool.query("SELECT * FROM courses WHERE id = $1", [course_id])
+    if (!rows || !rows[0]) {
+        res.status(400).json({ message: "Course_id does not match a course", success: false })
+    }
+    res.json(rows[0])
+}

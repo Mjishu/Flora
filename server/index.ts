@@ -8,6 +8,7 @@ import logger from "morgan"
 
 import session from "express-session";
 import passport from "./auth/passport.js";
+import { pool } from "./src/db/pool.js"
 
 
 import dotenv from "dotenv"
@@ -56,8 +57,26 @@ app.use("/api/plants/", plantData);
 app.use("/api/users/", userData);
 app.use("/api/cards/", cardData)
 app.use("/api/quiz/", quizData)
+app.use("/api/courses", quizData)
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`)
 })
 
+//* Shuts down pool
+
+process.on('SIGTERM', () => {
+    console.log('SIGTERM signal received: closing database pool');
+    pool.end(() => {
+        console.log('Database pool has been closed');
+        process.exit(0);  // Exiting the process after the pool is closed
+    });
+});
+
+process.on('SIGINT', () => {
+    console.log('SIGINT signal received: closing database pool');
+    pool.end(() => {
+        console.log('Database pool has been closed due to interruption');
+        process.exit(0);  // Exiting the process after the pool is closed
+    });
+});
