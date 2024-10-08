@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 dotenv.config();
 const { Client } = pkg;
 import * as pool from "./pool.js"
+import e from 'express';
 
 function sortData(data: { [key: string]: any }[]): { [key: string]: any }[] {
     return data.map((entry: { [key: string]: any }) => ({
@@ -242,27 +243,56 @@ export async function input_units() {
 
 export async function input_lessons() {
     const lessons_inputs = [
-        //*unit_id = await pool.query("select unit_id from courses where title="Intro to Plants")
-        { table: "lessons", title: "What is a Plant", unit_id: "", lesson_order: 1 },
-        { table: "lessons", title: "Plants and the Environment", unit_id: "", lesson_order: 2 },
-        { table: "lessons", title: "Physiology", unit_id: "", lesson_order: 3 },
-        //*unit_id = await pool.query("select unit_id from courses where title="Taxonomical Rankings")
-        { table: "lessons", title: "Taxonomical Order", unit_id: "", lesson_order: 1 },
-        { table: "lessons", title: "General Rankings", unit_id: "", lesson_order: 2 },
-        { table: "lessons", title: "Specific Ranking", unit_id: "", lesson_order: 3 },
-        { table: "lessons", title: "Clades and More", unit_id: "", lesson_order: 4 },
-        //*unit_id = await pool.query("select unit_id from courses where title="Classes of Plants")
-        { table: "lessons", title: "Grouping of Plants", unit_id: "", lesson_order: 1 },
-        { table: "lessons", title: "Into Angiosperms", unit_id: "", lesson_order: 2 },
-        { table: "lessons", title: "Into Gymnosperms", unit_id: "", lesson_order: 3 },
-        { table: "lessons", title: "Other Groupings", unit_id: "", lesson_order: 4 },
-        //*unit_id = await pool.query("select unit_id from courses where title="Regions")
-        { table: "lessons", title: "Overview of Regions", unit_id: "", lesson_order: 1 },
-        { table: "lessons", title: "Forests", unit_id: "", lesson_order: 2 }, //taiga,boreal,decidious forest
-        { table: "lessons", title: "Deserts", unit_id: "", lesson_order: 3 },
-        { table: "lessons", title: "Marine", unit_id: "", lesson_order: 4 },
-        { table: "lessons", title: "Tundra", unit_id: "", lesson_order: 5 },
-        { table: "lessons", title: "Grasslands", unit_id: "", lesson_order: 6 },
-        { table: "lessons", title: "Rain Forests", unit_id: "", lesson_order: 7 },
+        { table: "lessons", title: "What is a Plant", course_title: "Intro to Plants", unit_id: "", lesson_order: 1 },
+        { table: "lessons", title: "Plants and the Environment", course_title: "Intro to Plants", unit_id: "", lesson_order: 2 },
+        { table: "lessons", title: "Physiology", unit_id: "", course_title: "Intro to Plants", lesson_order: 3 },
+        { table: "lessons", title: "Taxonomical Order", unit_id: "", course_title: "Taxonomical Rankings", lesson_order: 1 },
+        { table: "lessons", title: "General Rankings", unit_id: "", course_title: "Taxonomical Rankings", lesson_order: 2 },
+        { table: "lessons", title: "Specific Ranking", unit_id: "", course_title: "Taxonomical Rankings", lesson_order: 3 },
+        { table: "lessons", title: "Clades and More", unit_id: "", course_title: "Taxonomical Rankings", lesson_order: 4 },
+        { table: "lessons", title: "Grouping of Plants", unit_id: "", course_title: "Classes of Plants", lesson_order: 1 },
+        { table: "lessons", title: "Into Angiosperms", unit_id: "", course_title: "Classes of Plants", lesson_order: 2 },
+        { table: "lessons", title: "Into Gymnosperms", unit_id: "", course_title: "Classes of Plants", lesson_order: 3 },
+        { table: "lessons", title: "Other Groupings", unit_id: "", course_title: "Classes of Plants", lesson_order: 4 },
+        { table: "lessons", title: "Overview of Regions", unit_id: "", course_title: "Regions", lesson_order: 1 },
+        { table: "lessons", title: "Forests", unit_id: "", course_title: "Regions", lesson_order: 2 }, //taiga,boreal,decidious forest
+        { table: "lessons", title: "Deserts", unit_id: "", course_title: "Regions", lesson_order: 3 },
+        { table: "lessons", title: "Marine", unit_id: "", course_title: "Regions", lesson_order: 4 },
+        { table: "lessons", title: "Tundra", unit_id: "", course_title: "Regions", lesson_order: 5 },
+        { table: "lessons", title: "Grasslands", unit_id: "", course_title: "Regions", lesson_order: 6 },
+        { table: "lessons", title: "Rain Forests", unit_id: "", course_title: "Regions", lesson_order: 7 },
     ]
+    console.log("Input lessons called")
+    for (const lesson of lessons_inputs) {
+        try {
+            const { rows } = await pool.query("SELECT id FROM units WHERE title = $1", [lesson.course_title])
+            console.log("row is ", rows)
+            if (rows.length > 0) {
+                const result = await pool.query("SELECT 1 FROM lessons WHERE title = $1 AND unit_id = $2", [lesson.title, rows[0].id])
+                if (result.rowCount === 0) {
+                    await pool.query("INSERT INTO lessons(title,unit_id,lesson_order) VALUES($1,$2,$3)", [lesson.title, rows[0].id, lesson.lesson_order])
+                } else {
+                    console.log(`Record with title: ${lesson.title} already exists`)
+                    continue
+                }
+            } else {
+                console.log("unit id does not exist")
+                continue
+            }
+        } catch (err) {
+            console.log("error trying to get lesson", err)
+            return
+        }
+    }
+}
+
+export async function input_challenges() {
+    const challenge_inputs = [
+        { lesson_id: "", type: "", challenge_order: 1, title: "", lesson_title: "" }, //* check the enum values for type, add title to db?(challenge without title doesn't make sense)
+    ]
+    for (const challenge of challenge_inputs) {
+        const { lesson_id, type, challenge_order, lesson_title } = challenge;
+
+    }
+
 }

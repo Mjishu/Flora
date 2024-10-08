@@ -9,11 +9,13 @@ export default function Navbar() {
     const navigate = useNavigate();
     return (
         <div className={style.navbar}>
-            <h2 onClick={() => navigate("/")}>Flora</h2>
-            <Link to="/courses" className={style.navbar_link}>Learn</Link>
-            <Link to="/plants" className={style.navbar_link}>Practice</Link>
-            <Link to="/profile" className={style.navbar_link}>{!userLoading && currentUser ? "Profile" : "Sign Up"}</Link>
-            <Link to="/login" className={style.navbar_link}>Login</Link>
+            <h2 className={style.title} onClick={() => navigate("/")}>Flora</h2>
+            <div className={style.link_holder}>
+                <Link to="/courses" className={style.navbar_link}>Learn</Link>
+                <Link to="/plants" className={style.navbar_link}>Practice</Link>
+                <Link to="/profile" className={style.navbar_link}>{!userLoading && currentUser ? "Profile" : "Log In"}</Link>
+                <Link to="/" className={style.navbar_link}>More</Link>
+            </div>
         </div>
     )
 }

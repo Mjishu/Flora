@@ -113,9 +113,9 @@ export default function PlantHome() {
 
 
   return (
-    <div >
+    <div className='content'>
       <Navbar />
-      <div className={style.content}>
+      <div className={style.plant_content}>
 
         {/* <h1>Plants</h1> */}
         <div className={style.card_board}>

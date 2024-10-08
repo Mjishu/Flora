@@ -11,7 +11,7 @@
 
 ## Frontend
 
--[x] when you finish all quizzes show a screen to say so
+-[ ]create the course page thats in figma, set up the backend routes as well
 
 ## Backend
 

@@ -103,24 +103,26 @@ function Profile() {
     })
 
     return (
-        <div>
+        <div className="content">
             <Navbar />
-            <h1>Welcome {currentUser.username}</h1>
-            <p>Your current Timezone is {currentUser.zone}</p>
-            <button onClick={() => setShowEdit(true)}>Edit</button>
-            {showEdit &&
-                <div className={style.editInfo}>
-                    <button className={style.userTimezones} onClick={() => setShowTimezone(prev => !prev)}>Timezone</button>
-                    <div className={`${showTimezone && style.timezoneHolder}`}>
-                        {showTimezone && mappedTimezones}
+            <div>
+                <h1>Welcome {currentUser.username}</h1>
+                <p>Your current Timezone is {currentUser.zone}</p>
+                <button onClick={() => setShowEdit(true)}>Edit</button>
+                {showEdit &&
+                    <div className={style.editInfo}>
+                        <button className={style.userTimezones} onClick={() => setShowTimezone(prev => !prev)}>Timezone</button>
+                        <div className={`${showTimezone && style.timezoneHolder}`}>
+                            {showTimezone && mappedTimezones}
+                        </div>
+                        <label htmlFor="username">Username</label>
+                        <input type="text" value={state.username} name="username" onChange={handleChange} />
+                        <label htmlFor="email">Email</label>
+                        <input type="text" value={state.email} name="email" onChange={handleChange} />
+                        <button className={style.saveButton} onClick={updateUser}>Save</button>
                     </div>
-                    <label htmlFor="username">Username</label>
-                    <input type="text" value={state.username} name="username" onChange={handleChange} />
-                    <label htmlFor="email">Email</label>
-                    <input type="text" value={state.email} name="email" onChange={handleChange} />
-                    <button className={style.saveButton} onClick={updateUser}>Save</button>
-                </div>
-            }
+                }
+            </div>
         </div>
     )
 }

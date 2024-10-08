@@ -21,17 +21,19 @@ function Home() {
         setDisplayUser(prevDisplay => ({ ...prevDisplay, username: currentUser?.username ?? "", show: !prevDisplay.show }))
     }
     return (
-        <div>
+        <div className='content'>
             <Navbar />
-            <p>Welcome to flora</p>
-            <button onClick={checkSignedIn}>Check logged in status</button>
-            <button onClick={() => AuthService.logout()}>Logout</button>
-            {displayUser.show && <h2>Your username is {displayUser.username}</h2>}
+            <div>
+                <p>Welcome to flora</p>
+                <button onClick={checkSignedIn}>Check logged in status</button>
+                <button onClick={() => AuthService.logout()}>Logout</button>
+                {displayUser.show && <h2>Your username is {displayUser.username}</h2>}
 
-            <div className={style.kingdomHolder}>
-                <button className={`${style.kingdomButton} fs-24`} onClick={() => navigate("/plants")}>Flora</button>
-                <button className={`${style.kingdomButton} fs-24`}>Fauna</button>
-                <button className={`${style.kingdomButton} fs-24`}>Fungi</button>`
+                <div className={style.kingdomHolder}>
+                    <button className={`${style.kingdomButton} fs-24`} onClick={() => navigate("/courses")}>Flora</button>
+                    <button className={`${style.kingdomButton} fs-24`}>Fauna</button>
+                    <button className={`${style.kingdomButton} fs-24`}>Fungi</button>`
+                </div>
             </div>
         </div>
     )

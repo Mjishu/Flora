@@ -4,7 +4,7 @@ import Error from "./src/components/general/Error.tsx"
 import Signup from "./src/components/user/Signup.tsx"
 import Login from "./src/components/user/Login.tsx"
 import Profile from "./src/pages/Profile.tsx"
-import PlantQuiz from "./src/components/plants/PlantQuiz.tsx"
+import Courses from "./src/components/general/Courses.tsx"
 
 const routes = [
     {
@@ -29,8 +29,8 @@ const routes = [
         element: <Profile />
     },
     {
-        path: "/quiz",
-        element: <PlantQuiz /> //* Im not sure if i want this to be a page or to just call this on plantHome?
+        path: "/courses",
+        element: <Courses />
     }
 ]
 
