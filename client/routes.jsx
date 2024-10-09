@@ -29,7 +29,7 @@ const routes = [
         element: <Profile />
     },
     {
-        path: "/courses",
+        path: "/courses/:id",
         element: <Courses />
     }
 ]

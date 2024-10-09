@@ -23,6 +23,9 @@
     export GOOGLE_APPLICATION_CREDENTIALS=../secrets/GCP/flora-437515-377b7fd09f84.json
     ./cloud_sql_proxy -instances=CONNECTION_NAME=tcp:5432
 `
+if error run :
+sudo lsof -i :5432
+sudo kill -9 <pid>
 
 # relations
 
