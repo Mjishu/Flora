@@ -44,18 +44,23 @@ export async function get_all_courses(req: Request, res: Response) {
 export async function get_courses(req: Request, res: Response) {
     try {
         const course_id = req.params.id;
-        const { rows } = await pool.query("SELECT * FROM courses WHERE id = $1", [course_id])
-        if (!rows || !rows[0]) {
+        const { rows: courseRows } = await pool.query("SELECT * FROM courses WHERE id = $1", [course_id])
+        if (!courseRows || !courseRows[0]) {
             res.status(400).json({ message: "Course_id does not match a course", success: false })
             return;
         }
-        const unit_lessons = await get_units(rows[0].id)
+        const unit_lessons = await get_units(course_id)
         if (!unit_lessons) {
             res.status(500).json({ message: "Error getting lessons" })
             return
         }
-        const { units, lessons } = unit_lessons;
-        res.json({ courses: rows[0].id, units, lessons })
+        const course = {
+            id: courseRows[0].id,
+            title: courseRows[0].title,
+            image_src: courseRows[0].image_src,
+            units: unit_lessons
+        }
+        res.json({ course })
     } catch (error) {
         console.log(`errror getting courses: ${error}`)
         res.status(500).json({ message: "error getting courses", success: false })
@@ -64,14 +69,21 @@ export async function get_courses(req: Request, res: Response) {
 
 async function get_units(course_id: string) {
     try {
-        const { rows } = await pool.query("SELECT * FROM units WHERE course_id = $1", [course_id]);
-        if (!rows) { return }
-        const lessons = []
+        const { rows: unitRows } = await pool.query("SELECT * FROM units WHERE course_id = $1", [course_id]);
+        if (!unitRows || unitRows.length === 0) { return [] }
 
-        for (const unit of rows) {
-            lessons.push(await get_lessons(unit.id))
-        }
-        return { lessons, units: rows }
+        const unitsWithLessons = await Promise.all(unitRows.map(async (unit) => {
+            const lessons = await get_lessons(unit.id);
+            return {
+                id: unit.id,
+                title: unit.title,
+                description: unit.description,
+                unit_order: unit.unit_order,
+                course_id: course_id,
+                lessons
+            };
+        }));
+        return unitsWithLessons
     } catch (error) {
         console.log(`Error in get_units: ${error}`)
         return
@@ -80,15 +92,21 @@ async function get_units(course_id: string) {
 
 async function get_lessons(unit_id: string) {
     try {
-        const { rows } = await pool.query("SELECT * FROM lessons WHERE unit_id = $1", [unit_id]);
-        if (!rows) { return [] }
+        const { rows: lessonRows } = await pool.query("SELECT * FROM lessons WHERE unit_id = $1", [unit_id]);
+        if (!lessonRows || lessonRows.length === 0) { return [] }
 
-        const lesson_with_challenges: Challenge[] | undefined = []
-        // for (const lesson from rows) {
-        //     const challenges = await get_challenges(lesson.id);
-        //     lesson_with_challenges.push({...lesson,challenges,})
-        // }
-        return rows;
+        const lessonWithChallenges = await Promise.all(lessonRows.map(async (lesson) => {
+            const challenges = await get_challenges(lesson.id);
+            return {
+                id: lesson.id,
+                title: lesson.title,
+                unit_id: unit_id,
+                lesson_order: lesson.lesson_order,
+                challenges
+            }
+        }))
+
+        return lessonWithChallenges
     } catch (error) {
         console.log(`error in get_lessons: ${error}`)
         return
@@ -97,9 +115,19 @@ async function get_lessons(unit_id: string) {
 
 async function get_challenges(lesson_id: string) {
     try {
-        const { rows } = await pool.query("SELECT * FROM challenges WHERE lesson_id = $1", [lesson_id]);
-        if (!rows) { return }
-        return rows
+        const { rows: challengeRows } = await pool.query("SELECT * FROM challenges WHERE lesson_id = $1", [lesson_id]);
+        if (!challengeRows || challengeRows.length === 0) { return [] }
+        const challengesWithAnswers = await Promise.all(challengeRows.map(async (challenge) => {
+            // const answers = []//await get_challenge_answers(challenge.id)
+            return {
+                id: challenge.id,
+                lesson_id: lesson_id,
+                type: challenge.type,
+                challenge_order: challenge.challenge_order
+                // answers
+            }
+        }))
+        return challengesWithAnswers
     } catch (error) {
         console.log(`error in get_challenges: ${error}`)
         return

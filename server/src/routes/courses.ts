@@ -7,8 +7,6 @@ import * as pop from "../db/populatedb.js"
 
 router.get("/all", quizController.get_all_courses)
 
-
-
 router.get("/:id", quizController.get_courses) //Everything should be above this 
 
 
