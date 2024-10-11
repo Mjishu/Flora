@@ -1,0 +1,12 @@
+
+
+.lesson_button{
+    border: 1px solid brown;
+    background: transparent;
+    border-radius: 50%;
+}
+.lesson_image{
+    border:none;
+    background: transparent;
+    padding: .5rem;
+}

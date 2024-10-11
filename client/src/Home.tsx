@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './App.css';
 import style from "./styles/homePage.module.css"
 import { UseUser } from "./components/user/userContext";
 import authService from './auth/authService';
