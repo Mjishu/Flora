@@ -11,8 +11,8 @@ export default function Navbar() {
         <div className={style.navbar}>
             <h2 className={style.title} onClick={() => navigate("/")}>Flora</h2>
             <div className={style.link_holder}>
-                <Link to="/courses" className={style.navbar_link}>Learn</Link>
-                <Link to="/plants" className={style.navbar_link}>Practice</Link>
+                <Link to="/" className={style.navbar_link}>Learn</Link>
+                <Link to="/review" className={style.navbar_link}>Practice</Link>
                 <Link to="/profile" className={style.navbar_link}>{!userLoading && currentUser ? "Profile" : "Log In"}</Link>
                 <Link to="/" className={style.navbar_link}>More</Link>
             </div>

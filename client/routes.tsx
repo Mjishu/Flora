@@ -5,6 +5,7 @@ import Signup from "./src/components/user/Signup.tsx"
 import Login from "./src/components/user/Login.tsx"
 import Profile from "./src/pages/Profile.tsx"
 import Courses from "./src/components/general/Courses.tsx"
+import LessonsComponent from "./src/components/general/Lessons.tsx"
 
 const routes = [
     {
@@ -13,7 +14,7 @@ const routes = [
         errorElement: <Error />
     },
     {
-        path: "/plants",
+        path: "/review",
         element: <PlantHome />
     },
     {
@@ -27,6 +28,9 @@ const routes = [
     {
         path: "/profile",
         element: <Profile />
+    }, {
+        path: "/courses/lessons/:id",
+        element: <LessonsComponent />
     },
     {
         path: "/courses/:id",

@@ -133,3 +133,22 @@ async function get_challenges(lesson_id: string) {
         return
     }
 }
+
+export async function get_lesson_data(req: Request, res: Response) {
+    const lesson_id = req.params.id;
+    try {
+        const { rows: lessonRows } = await pool.query("SELECT * FROM lessons WHERE id = $1", [lesson_id]);
+        if (!lessonRows || lessonRows.length === 0) { return [] }
+        const challenges = await get_challenges(lesson_id) //! this should still be [] because I havent added any challenges to the database
+        const lessonData = {
+            id: lessonRows[0].id,
+            title: lessonRows[0].title,
+            unit_id: lessonRows[0].unit_id,
+            lesson_order: lessonRows[0].lesson_order,
+            challenges
+        }
+        res.json(lessonData)
+    } catch (error) {
+        res.status(404).json({ message: `could not find lesson with id:${lesson_id}| ${error}`, success: false })
+    }
+}

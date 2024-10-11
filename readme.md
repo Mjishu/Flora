@@ -25,9 +25,9 @@
 `
 if error run :
 sudo lsof -i :5432
-sudo kill -9 <pid>
+sudo kill -9 pid
 
-# relations
+## relations
 
 users <-> courses (users can have many courses,courses have many users) | user_courses
 

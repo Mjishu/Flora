@@ -4,14 +4,10 @@ import style from "./styles/homePage.module.css"
 import { UseUser } from "./components/user/userContext";
 import authService from './auth/authService';
 import Navbar from './components/general/Navbar';
+import { Courses } from './types';
 
 const AuthService = new authService();
 
-interface Courses {
-    id: string;
-    title: string;
-    image_src: string | null;
-}
 
 function useCourses() {
     const [courses, setCourses] = React.useState<Courses[] | undefined>(undefined);
@@ -60,9 +56,6 @@ function Home() {
                 {displayUser.show && <h2>Your username is {displayUser.username}</h2>}
 
                 <div className={style.kingdomHolder}>
-                    {/* <button className={`${style.kingdomButton} fs-24`} onClick={() => navigate("/courses")}>Flora</button>
-                    <button className={`${style.kingdomButton} fs-24`}>Fauna</button>
-                    <button className={`${style.kingdomButton} fs-24`}>Fungi</button>` */}
                     {coursesMapped}
                 </div>
             </div>
